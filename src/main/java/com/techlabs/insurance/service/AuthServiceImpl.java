@@ -57,7 +57,6 @@ public class AuthServiceImpl implements AuthService{
 //		user.setUser(registerDto.getUser());
 		
 		Optional<Role> userRole= roleRepo.findById(roleid);
-//				roleRepository.findByRolename("ROLE_CUSTOMER");
 		List<Role> roles = new ArrayList<Role>();
 		if(userRole.isPresent()) {
 			roles.add(userRole.get());

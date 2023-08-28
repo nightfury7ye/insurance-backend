@@ -33,7 +33,7 @@ public class InsurancePlan {
 	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name="planid")
-	private List<InsuranceScheme> schemes;
+	List<InsuranceScheme> schemes;
 	
 	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="statusid")

@@ -47,6 +47,10 @@ public class Policy {
 	@Column
 	private double sumassured;
 	
+	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name="typeid")
+	private InstallmentType installmentType;
+	
 	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="custid")
 	private Customer customer;

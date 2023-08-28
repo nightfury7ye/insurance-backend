@@ -1,5 +1,8 @@
 package com.techlabs.insurance.entities;
 
+import java.sql.Date;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,31 +20,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SchemeDetails {
+public class InstallmentType {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column
-	private int detailid;
+	private int typeid;
 	@Column
-	private String discription;
-	@Column
-	private double min_amount;
-	@Column
-	private double max_amount;
-	@Column
-	private int min_invest_time;
-	@Column
-	private int max_invest_time;
-	@Column
-	private int min_age;
-	@Column
-	private int max_age;
-	@Column
-	private int profit_ratio;
-	@Column
-	private int registrationcommratio;
-	@Column
-	private int installmentcommratio;
-	
-	
+	private int type_value;
 }
