@@ -3,12 +3,14 @@ package com.techlabs.insurance.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techlabs.insurance.entities.Employee;
@@ -32,6 +34,12 @@ public class AdminController {
 	@PostMapping("/save_employee")
 	Employee saveEmployee(@RequestBody Employee employee) {
 		return employeeService.saveEmployee(employee);
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/get_all_employees")
+	public Page<Employee> getAllEmployees(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
+		return employeeService.getAllEmployees(page, size);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")

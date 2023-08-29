@@ -30,13 +30,9 @@ public class Policy {
 	@Column
 	private int policyno;
 	@Column
-	private String discription;
-	@Column
 	private Date issuedate;
 	@Column
 	private Date maturitydate;
-	@Column
-	private int premiumtype;
 	@Column
 	private double premiumamount;
 	

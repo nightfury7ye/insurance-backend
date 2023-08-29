@@ -2,6 +2,8 @@ package com.techlabs.insurance.entities;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,7 +39,11 @@ public class Payment {
 	private int tax;
 	@Column
 	private double totalpayment;
+	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name="statusid")
+	Payment_status status;
 	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="policyno")
+	@JsonIgnore
 	private Policy policy;
 }

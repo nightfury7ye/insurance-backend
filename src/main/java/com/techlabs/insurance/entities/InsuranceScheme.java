@@ -45,6 +45,7 @@ public class InsuranceScheme {
 	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name="schemeid")
+	@JsonIgnore
 	private List<Policy> policy;
 	
 	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})

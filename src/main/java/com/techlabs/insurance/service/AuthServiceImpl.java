@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService{
 		return token;
 	}
 	@Override
-	public String register(RegisterDto registerDto, int roleid) {
+	public User register(RegisterDto registerDto, int roleid) {
 		if(userRepo.existsByUsername(registerDto.getUsername())) 
 			throw new UserAPIException(HttpStatus.BAD_REQUEST, "User already exists");
 
@@ -62,10 +62,7 @@ public class AuthServiceImpl implements AuthService{
 			roles.add(userRole.get());
 		}		
 		user.setRoles(roles);
-		userRepo.save(user);
-		System.out.println(user);
-
-		return "User registered successfully";
+		return userRepo.save(user);
 	}
 	
 }

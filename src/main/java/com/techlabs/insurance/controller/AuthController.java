@@ -47,9 +47,9 @@ public class AuthController {
 	}
 
 	@PostMapping("/register/{roleid}")
-	public ResponseEntity<String> register(@RequestBody RegisterDto registerDto,@PathVariable(name="roleid") int roleid){
+	public ResponseEntity<User> register(@RequestBody RegisterDto registerDto,@PathVariable(name="roleid") int roleid){
 	System.out.println("This is Register method");
-	String response = authservice.register(registerDto, roleid);
+	User response = authservice.register(registerDto, roleid);
 	return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 }

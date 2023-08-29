@@ -5,18 +5,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.techlabs.insurance.entities.Employee;
-import com.techlabs.insurance.entities.InsurancePlan;
-import com.techlabs.insurance.entities.InsuranceScheme;
 import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.repo.EmployeeRepo;
-import com.techlabs.insurance.repo.InsurancePlanRepo;
-import com.techlabs.insurance.repo.InsuranceSchemeRepo;
 import com.techlabs.insurance.repo.RoleRepo;
 
 import lombok.RequiredArgsConstructor;
@@ -46,6 +45,12 @@ public class EmployeeServiceImpl implements EmployeeService{
 		user.setRoles(roles);
 		employee.setUser(user);
 		return employeeRepo.save(employee);
+	}
+
+	@Override
+	public Page<Employee> getAllEmployees(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return employeeRepo.findAll(pageable);
 	}
 	
 	

@@ -1,13 +1,10 @@
 package com.techlabs.insurance.entities;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,18 +17,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Documents {
+public class Payment_status {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column
-	private int documentid;
+	private int statusid;
 	@Column
-	private String documentname;
-	@Column
-	private String doc_type;
-	@Column
-	private String documentpath;
-	@ManyToOne(cascade= CascadeType.ALL)
-	@JoinColumn(name="custid")
-	private Customer customenr;
+	private String statusname;
 }
