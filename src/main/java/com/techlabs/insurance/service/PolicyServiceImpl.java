@@ -150,7 +150,7 @@ public class PolicyServiceImpl implements PolicyService{
 
 	@Override
 	public Payment payInstallment(Payment payment ,int paymentid) {
-		System.out.println("pay installments");
+		System.out.println("pay installment");
 		Payment dbpayment = paymentRepo.findById(paymentid).get();
 		dbpayment.setPaymenttype(payment.getPaymenttype());
 		Optional<Payment_status> status= paymentStatusRepo.findById(1);
