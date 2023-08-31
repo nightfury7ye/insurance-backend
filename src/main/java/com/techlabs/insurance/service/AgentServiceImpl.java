@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.techlabs.insurance.entities.Agent;
-import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.User_status;
