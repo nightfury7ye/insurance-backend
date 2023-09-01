@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Customer;
-import com.techlabs.insurance.entities.User_status;
 import com.techlabs.insurance.service.AgentService;
 import com.techlabs.insurance.service.CustomerService;
 
@@ -27,9 +26,9 @@ public class EmployeeController {
 	private CustomerService customerService;
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@PostMapping("/save_agent")
-	Agent addAgent(@RequestBody Agent agent) {
-		return agentService.addAgent(agent);
+	@PostMapping("/save_agent/{statusid}")
+	Agent addAgent(@RequestBody Agent agent, @PathVariable(name="statusid")int statusId) {
+		return agentService.addAgent(agent, statusId);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
@@ -39,9 +38,9 @@ public class EmployeeController {
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@PostMapping("/update_agentstatus/{agentid}")
-	public Agent updateAgentStatus(@PathVariable(name="agentid")int agentId, @RequestBody User_status userStatus) {
-		return agentService.updateAgentStatus(agentId, userStatus);
+	@PostMapping("/update_agentstatus/{agentid}/{statusid}")
+	public Agent updateAgentStatus(@PathVariable(name="agentid")int agentId, @PathVariable(name="statusid")int statusId) {
+		return agentService.updateAgentStatus(agentId, statusId);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")

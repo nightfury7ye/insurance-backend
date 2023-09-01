@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Role;
-import com.techlabs.insurance.entities.Status;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.User_status;
 import com.techlabs.insurance.repo.AgentRepo;
 import com.techlabs.insurance.repo.RoleRepo;
-import com.techlabs.insurance.repo.StatusRepo;
 import com.techlabs.insurance.repo.UserStatusRepo;
 
 import lombok.RequiredArgsConstructor;
