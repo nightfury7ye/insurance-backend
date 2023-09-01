@@ -9,4 +9,6 @@ public interface CustomerService {
 	Page<Customer> getAllCustomers(int page, int size);
 	Customer getCustomerById(int customerId);
 	void deleteCustomer(int customerId);
+	Page<Customer> getAllDisabledCustomers(int page, int size);
+	Customer updateCustomerStatus(int customerId, int newStatusId);
 }

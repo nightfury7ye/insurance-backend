@@ -17,6 +17,7 @@ import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.repo.EmployeeRepo;
 import com.techlabs.insurance.repo.RoleRepo;
+import com.techlabs.insurance.repo.UserRepo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +32,8 @@ public class EmployeeServiceImpl implements EmployeeService{
 	private EmployeeRepo employeeRepo;
 	@Autowired
 	private RoleRepo roleRepo;
+	@Autowired
+	private UserRepo userRepo;
 	
 	@Override
 	public Employee saveEmployee(Employee employee) {
@@ -59,7 +62,13 @@ public class EmployeeServiceImpl implements EmployeeService{
 		if(existingEmployee != null) {
 			existingEmployee.setFirstname(updatedEmployee.getFirstname());
 			existingEmployee.setLastname(updatedEmployee.getLastname());
-			existingEmployee.setUser(updatedEmployee.getUser());
+			
+			User existingUser = userRepo.findById(existingEmployee.getUser().getUserid()).orElse(null);
+			if(existingUser != null) {
+				existingUser.setUsername(updatedEmployee.getUser().getUsername());
+				existingUser.setPassword(passwordEncoder.encode(updatedEmployee.getUser().getPassword()));
+				userRepo.save(existingUser);
+			}
 			
 			return employeeRepo.save(existingEmployee);
 		}

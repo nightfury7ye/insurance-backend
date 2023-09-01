@@ -13,10 +13,12 @@ import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Customer;
 import com.techlabs.insurance.entities.Policy;
 import com.techlabs.insurance.entities.User;
+import com.techlabs.insurance.entities.User_status;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.PolicyRepo;
 
+import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -56,6 +58,22 @@ public class CustomerServiceImpl implements CustomerService{
 	@Override
 	public void deleteCustomer(int customerId) {
 		customerRepo.deleteById(customerId);
+	}
+
+	@Override
+	public Page<Customer> getAllDisabledCustomers(int page, int size) {
+		int disabledStatusId = 2;
+		Pageable pageable = PageRequest.of(page, size);
+		return customerRepo.findByStatusid(disabledStatusId, pageable);
+	}
+
+	@Override
+	public Customer updateCustomerStatus(int customerId, int newStatusId) {
+		Customer customer = customerRepo.findById(customerId).orElse(null);
+		User_status status = customer.getUser_status();
+		status.setStatusid(newStatusId);
+		customer.setUser_status(status);
+		return customerRepo.save(customer);
 	}
 	
 }

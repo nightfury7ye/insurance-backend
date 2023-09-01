@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -55,5 +56,9 @@ public class Customer {
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name="custid")
 	private List<Policy> policy;
+	
+	@ManyToOne(cascade= CascadeType.ALL)
+	@JoinColumn(name="statusid")
+	User_status user_status;
 	
 }
