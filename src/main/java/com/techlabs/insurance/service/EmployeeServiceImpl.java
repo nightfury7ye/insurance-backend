@@ -52,6 +52,19 @@ public class EmployeeServiceImpl implements EmployeeService{
 		Pageable pageable = PageRequest.of(page, size);
 		return employeeRepo.findAll(pageable);
 	}
+
+	@Override
+	public Employee updateEmployee(int employeeId, Employee updatedEmployee) {
+		Employee existingEmployee = employeeRepo.findById(employeeId).orElse(null);
+		if(existingEmployee != null) {
+			existingEmployee.setFirstname(updatedEmployee.getFirstname());
+			existingEmployee.setLastname(updatedEmployee.getLastname());
+			existingEmployee.setUser(updatedEmployee.getUser());
+			
+			return employeeRepo.save(existingEmployee);
+		}
+		return null;
+	}
 	
 	
 }

@@ -6,6 +6,6 @@ import com.techlabs.insurance.entities.Employee;
 
 public interface EmployeeService {
 	Employee saveEmployee(Employee employee);
-	
 	Page<Employee> getAllEmployees(int page, int size);
+	Employee updateEmployee(int employeeId, Employee updatedEmployee);
 }
