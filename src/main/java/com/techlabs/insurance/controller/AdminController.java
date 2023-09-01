@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,4 +77,18 @@ public class AdminController {
 	public void deleteCustomer(@PathVariable(name="employeeid")int employeeId) {
 		employeeService.deleteEmployee(employeeId);
 	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/enablecustomer/{customerId}")
+    public ResponseEntity<String> enableCustomer(@PathVariable(name="customerId") int customerId) {
+        customerService.enableCustomerStatus(customerId);
+        return ResponseEntity.ok("Customer status enabled");
+    }
+
+	@PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/disablecustomer/{customerId}")
+    public ResponseEntity<String> disableCustomer(@PathVariable(name="customerId") int customerId) {
+        customerService.disableCustomerStatus(customerId);
+        return ResponseEntity.ok("Customer status disabled");
+    }
 }
