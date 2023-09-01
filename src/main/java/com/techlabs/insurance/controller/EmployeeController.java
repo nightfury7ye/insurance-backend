@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Customer;
+import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.service.AgentService;
 import com.techlabs.insurance.service.CustomerService;
+import com.techlabs.insurance.service.EmployeeService;
 
 @RestController
 @RequestMapping("/employeeapp")
@@ -24,6 +27,8 @@ public class EmployeeController {
 	private AgentService agentService;
 	@Autowired
 	private CustomerService customerService;
+	@Autowired
+	private EmployeeService employeeService;
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	@PostMapping("/save_agent/{statusid}")
@@ -38,7 +43,7 @@ public class EmployeeController {
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@PostMapping("/update_agentstatus/{agentid}/{statusid}")
+	@PutMapping("/update_agentstatus/{agentid}/{statusid}")
 	public Agent updateAgentStatus(@PathVariable(name="agentid")int agentId, @PathVariable(name="statusid")int statusId) {
 		return agentService.updateAgentStatus(agentId, statusId);
 	}
@@ -56,7 +61,7 @@ public class EmployeeController {
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@DeleteMapping("/get_customer/{customerid}")
+	@GetMapping("/get_customer/{customerid}")
 	public void getCustomerById(@PathVariable(name="customerid")int customerId) {
 		customerService.getCustomerById(customerId);
 	}
@@ -65,5 +70,11 @@ public class EmployeeController {
 	@DeleteMapping("/delete_customer/{customerid}")
 	public void deleteCustomer(@PathVariable(name="customerid")int customerId) {
 		customerService.deleteCustomer(customerId);
+	}
+	
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	@PutMapping("/update_employee/{employeeid}")
+	public void updateEmployee(@PathVariable(name="employeeid")int employeeId, @RequestBody Employee updatedEmployee) {
+		employeeService.updateEmployee(employeeId, updatedEmployee);
 	}
 }

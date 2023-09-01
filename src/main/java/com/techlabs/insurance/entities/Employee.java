@@ -25,10 +25,16 @@ public class Employee {
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column
 	private int employeeid;
+	
 	@Column
 	private String firstname;
+	
 	@Column
 	private String lastname;
+	
+	@Column
+	private double salary;
+	
 	@OneToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="userid")
 	User user;
