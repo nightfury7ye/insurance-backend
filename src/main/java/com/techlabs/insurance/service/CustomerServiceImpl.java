@@ -76,4 +76,26 @@ public class CustomerServiceImpl implements CustomerService{
 		return customerRepo.save(customer);
 	}
 	
+	public void enableCustomerStatus(int customerId) {
+		int enabledStatus = 1;
+		Customer customer = customerRepo.findById(customerId).orElse(null);
+		User_status status = customer.getUser_status();
+        if (status.getStatusid()==2) {
+        	status.setStatusid(enabledStatus);
+        	customer.setUser_status(status);
+    		customerRepo.save(customer);
+        }
+    }
+
+    public void disableCustomerStatus(int customerId) {
+    	int disabledStatus = 2;
+		Customer customer = customerRepo.findById(customerId).orElse(null);
+		User_status status = customer.getUser_status();
+        if (status.getStatusid()==1) {
+        	status.setStatusid(disabledStatus);
+        	customer.setUser_status(status);
+    		customerRepo.save(customer);
+        }
+    }
+	
 }
