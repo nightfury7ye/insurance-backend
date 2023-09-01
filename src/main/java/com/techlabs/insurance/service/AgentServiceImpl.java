@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Role;
+import com.techlabs.insurance.entities.Status;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.User_status;
 import com.techlabs.insurance.repo.AgentRepo;
 import com.techlabs.insurance.repo.RoleRepo;
+import com.techlabs.insurance.repo.StatusRepo;
+import com.techlabs.insurance.repo.UserStatusRepo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,9 +35,11 @@ public class AgentServiceImpl implements AgentService{
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private RoleRepo roleRepo;
+	@Autowired
+	private UserStatusRepo userStatusRepo;
 	
 	@Override
-	public Agent addAgent(Agent agent) {
+	public Agent addAgent(Agent agent, int statusId) {
 		User user = agent.getUser();
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
@@ -45,6 +50,13 @@ public class AgentServiceImpl implements AgentService{
 		}		
 		user.setRoles(roles);
 		agent.setUser(user);
+		
+		Optional<User_status> status = userStatusRepo.findById(statusId);
+		if(status.isPresent()) {
+			agent.setUser_status(status.get());
+		}else {
+			agent.setUser_status(userStatusRepo.findById(1).get());
+		}
 		return agentRepo.save(agent);
 	}
 
@@ -54,11 +66,17 @@ public class AgentServiceImpl implements AgentService{
 	}
 
 	@Override
-	public Agent updateAgentStatus(int agentId, User_status userStatus) {
-		Optional<Agent> agent = agentRepo.findById(agentId); 
-		Agent agentToUpdate=agent.get();
-		agentToUpdate.setUser_status(userStatus);
-		return agentRepo.save(agentToUpdate);
+	public Agent updateAgentStatus(int agentId, int statusId) {
+		Optional<Agent> agent = agentRepo.findById(agentId);
+		
+		Optional<User_status> status = userStatusRepo.findById(statusId);
+		if(status.isPresent()) {
+			agent.get().setUser_status(status.get());
+		}else {
+			agent.get().setUser_status(userStatusRepo.findById(1).get());
+		}
+		
+		return agentRepo.save(agent.get());
 	}
 
 	@Override
