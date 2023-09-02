@@ -71,7 +71,7 @@ public class PolicyServiceImpl implements PolicyService{
 	}
 
 	@Override
-	public List<Payment> payFirstinstallment(int policyid, Payment payment) {
+	public List<Payment> payFirstInstallment(int policyid, Payment payment) {
 		LocalDate date1 = LocalDate.now();
 		int count = 0;
 		Policy policy = (policyRepo.findById(policyid)).get();

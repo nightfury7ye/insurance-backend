@@ -1,5 +1,7 @@
 package com.techlabs.insurance.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Customer;
+import com.techlabs.insurance.entities.Payment;
 import com.techlabs.insurance.service.AgentService;
 import com.techlabs.insurance.service.CustomerService;
+import com.techlabs.insurance.service.PolicyService;
 
 @RestController
 @RequestMapping("/agentapp")
@@ -22,6 +26,7 @@ public class AgentController {
 	private AgentService agentService;
 	@Autowired
 	private CustomerService customerService;
+	@Autowired PolicyService policyService;
 	
 	@PreAuthorize("hasRole('AGENT')")
 	@PostMapping("/register_agent")
@@ -45,5 +50,11 @@ public class AgentController {
 	@PostMapping("/register_customer")
 	public Customer registerCustomer(@RequestBody Customer customer) {
 		return customerService.registerCustomer(customer);
+	}
+	
+	@PreAuthorize("hasRole('AGENT')")
+	@PostMapping("/pay_first_installment/{policyid}")
+	public List<Payment> payFirstInstallment(@PathVariable(name="policyid") int policyid,@RequestBody Payment payment){
+		return policyService.payFirstInstallment(policyid, payment);
 	}
 }

@@ -58,8 +58,8 @@ public class CustomerController {
 	
 	@PreAuthorize("hasRole('CUSTOMER')")
 	@PostMapping("/pay_first_installment/{policyid}")
-	public List<Payment> payFirstinstallment(@PathVariable(name="policyid") int policyid,@RequestBody Payment payment){
-		return policyService.payFirstinstallment(policyid, payment);
+	public List<Payment> payFirstInstallment(@PathVariable(name="policyid") int policyid,@RequestBody Payment payment){
+		return policyService.payFirstInstallment(policyid, payment);
 	}
 	
 	@PreAuthorize("hasRole('CUSTOMER')")
