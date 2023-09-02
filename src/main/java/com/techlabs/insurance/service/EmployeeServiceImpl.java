@@ -67,7 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 			if(existingUser != null) {
 				existingUser.setUsername(updatedEmployee.getUser().getUsername());
 				existingUser.setPassword(passwordEncoder.encode(updatedEmployee.getUser().getPassword()));
-				userRepo.save(existingUser);
+				existingEmployee.setUser(existingUser);
 			}
 			
 			return employeeRepo.save(existingEmployee);

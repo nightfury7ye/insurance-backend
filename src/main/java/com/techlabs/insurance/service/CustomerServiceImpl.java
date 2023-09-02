@@ -15,7 +15,6 @@ import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.PolicyRepo;
 
-import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -61,7 +60,8 @@ public class CustomerServiceImpl implements CustomerService{
 	public Page<Customer> getAllDisabledCustomers(int page, int size) {
 		int disabledStatusId = 2;
 		Pageable pageable = PageRequest.of(page, size);
-		return customerRepo.findByStatusid(disabledStatusId, pageable);
+		//return customerRepo.findById(disabledStatusId);
+		return null;
 	}
 
 	@Override
