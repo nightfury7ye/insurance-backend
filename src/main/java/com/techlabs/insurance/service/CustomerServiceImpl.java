@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.techlabs.insurance.entities.Customer;
 import com.techlabs.insurance.entities.User;
+import com.techlabs.insurance.entities.User_status;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.PolicyRepo;
 
+import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -54,6 +56,44 @@ public class CustomerServiceImpl implements CustomerService{
 	public void deleteCustomer(int customerId) {
 		customerRepo.deleteById(customerId);
 	}
+
+	@Override
+	public Page<Customer> getAllDisabledCustomers(int page, int size) {
+		int disabledStatusId = 2;
+		Pageable pageable = PageRequest.of(page, size);
+		return customerRepo.findByStatusid(disabledStatusId, pageable);
+	}
+
+	@Override
+	public Customer updateCustomerStatus(int customerId, int newStatusId) {
+		Customer customer = customerRepo.findById(customerId).orElse(null);
+		User_status status = customer.getUser_status();
+		status.setStatusid(newStatusId);
+		customer.setUser_status(status);
+		return customerRepo.save(customer);
+	}
+	
+	public void enableCustomerStatus(int customerId) {
+		int enabledStatus = 1;
+		Customer customer = customerRepo.findById(customerId).orElse(null);
+		User_status status = customer.getUser_status();
+        if (status.getStatusid()==2) {
+        	status.setStatusid(enabledStatus);
+        	customer.setUser_status(status);
+    		customerRepo.save(customer);
+        }
+    }
+
+    public void disableCustomerStatus(int customerId) {
+    	int disabledStatus = 2;
+		Customer customer = customerRepo.findById(customerId).orElse(null);
+		User_status status = customer.getUser_status();
+        if (status.getStatusid()==1) {
+        	status.setStatusid(disabledStatus);
+        	customer.setUser_status(status);
+    		customerRepo.save(customer);
+        }
+    }
 	
 	@Override
 	public Customer getCustomerByUsername(String username) {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.techlabs.insurance.entities.Customer;
 import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.InsurancePlan;
 import com.techlabs.insurance.entities.InsuranceScheme;
+import com.techlabs.insurance.service.CustomerService;
 import com.techlabs.insurance.service.EmployeeService;
 import com.techlabs.insurance.service.InsurancePlanService;
 import com.techlabs.insurance.service.InsuranceSchemeService;
@@ -31,6 +34,8 @@ public class AdminController {
 	private InsurancePlanService insurancePlanService;
 	@Autowired
 	private InsuranceSchemeService insuranceSchemeService;
+	@Autowired
+	private CustomerService customerService;
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/save_employee")
@@ -46,7 +51,7 @@ public class AdminController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/save_insuranceplan/{statusid}")
-	InsurancePlan saveInsurancePlan(@RequestBody InsurancePlan insurancePlan,@PathVariable(name="statusid") int statusid) {
+	public InsurancePlan saveInsurancePlan(@RequestBody InsurancePlan insurancePlan,@PathVariable(name="statusid") int statusid) {
 		return insurancePlanService.saveInsurancePlan(insurancePlan, statusid);
 	}
 	
@@ -82,13 +87,39 @@ public class AdminController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/save_insurance_scheme/{planid}/{statusid}")
-	InsuranceScheme saveInsuranceScheme(@RequestBody InsuranceScheme insuranceScheme,@PathVariable(name="planid") int planid,@PathVariable(name="statusid") int statusid) {
+	public InsuranceScheme saveInsuranceScheme(@RequestBody InsuranceScheme insuranceScheme,@PathVariable(name="planid") int planid,@PathVariable(name="statusid") int statusid) {
 		return insuranceSchemeService.saveInsuranceScheme(insuranceScheme, planid, statusid);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/get_insurance_plans")
-	List<InsurancePlan> getInsurancePlans() {
+	public List<InsurancePlan> getInsurancePlans() {
 		return insurancePlanService.getInsurancePlans();
 	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/getallcustomers")
+	public Page<Customer> getAllCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
+		return customerService.getAllCustomers(page, size);
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping("/delete_employee/{employeeid}")
+	public void deleteCustomer(@PathVariable(name="employeeid")int employeeId) {
+		employeeService.deleteEmployee(employeeId);
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/enablecustomer/{customerId}")
+    public ResponseEntity<String> enableCustomer(@PathVariable(name="customerId") int customerId) {
+        customerService.enableCustomerStatus(customerId);
+        return ResponseEntity.ok("Customer status enabled");
+    }
+
+	@PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/disablecustomer/{customerId}")
+    public ResponseEntity<String> disableCustomer(@PathVariable(name="customerId") int customerId) {
+        customerService.disableCustomerStatus(customerId);
+        return ResponseEntity.ok("Customer status disabled");
+    }
 }

@@ -77,4 +77,16 @@ public class EmployeeController {
 	public void updateEmployee(@PathVariable(name="employeeid")int employeeId, @RequestBody Employee updatedEmployee) {
 		employeeService.updateEmployee(employeeId, updatedEmployee);
 	}
+	
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	@GetMapping("/disabled_customers")
+	public Page<Customer> getAllDisabledCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
+		return customerService.getAllDisabledCustomers(page, size);
+	}
+	
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	@PutMapping("/update_customer_status/{customerid}/{statusid}")
+	public Customer updateCustomerStatus(@PathVariable(name="customerid")int customerId, @PathVariable(name="statusid")int statusId) {
+		return customerService.updateCustomerStatus(customerId, statusId);
+	}
 }
