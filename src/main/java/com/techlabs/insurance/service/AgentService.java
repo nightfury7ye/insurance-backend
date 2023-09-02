@@ -8,5 +8,9 @@ public interface AgentService {
 	public Agent addAgent(Agent agent, int statusId);
 	public void deleteAgent(int agentId);
 	public Agent updateAgentStatus(int agentId, int statusId);
-	Page<Agent> getAllAgents(int page, int size);
+	public Page<Agent> getAllAgents(int page, int size);
+	
+	public Agent registerAgent(Agent agent);
+	public Agent getAgentByUsername(String username);
+	public Agent updateAgentProfile(String username, Agent updatedAgent);
 }

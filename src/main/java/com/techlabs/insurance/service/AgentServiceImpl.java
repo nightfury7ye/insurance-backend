@@ -16,8 +16,11 @@ import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.User_status;
+import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.AgentRepo;
+import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.RoleRepo;
+import com.techlabs.insurance.repo.UserRepo;
 import com.techlabs.insurance.repo.UserStatusRepo;
 
 import lombok.RequiredArgsConstructor;
@@ -35,6 +38,12 @@ public class AgentServiceImpl implements AgentService{
 	private RoleRepo roleRepo;
 	@Autowired
 	private UserStatusRepo userStatusRepo;
+	@Autowired
+	private CustomerRepo customerRepo;
+	@Autowired
+	private AuthService authService;
+	@Autowired
+	private UserRepo userRepo;
 	
 	@Override
 	public Agent addAgent(Agent agent, int statusId) {
@@ -81,6 +90,39 @@ public class AgentServiceImpl implements AgentService{
 	public Page<Agent> getAllAgents(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		return agentRepo.findAll(pageable);
+	}
+
+	@Override
+	public Agent registerAgent(Agent agent) {
+		RegisterDto registerDto = new RegisterDto();
+		registerDto.setUsername(agent.getUser().getUsername());
+		registerDto.setPassword(agent.getUser().getPassword());
+		User user = authService.register(registerDto, 1);
+		agent.setUser(user);
+		return agentRepo.save(agent);
+	}
+
+	@Override
+	public Agent getAgentByUsername(String username) {
+		return agentRepo.findByUserUsername(username);
+	}
+
+	@Override
+	public Agent updateAgentProfile(String username, Agent updatedAgent) {
+		Agent existingAgent = agentRepo.findByUserUsername(username);
+		if(existingAgent != null) {
+			existingAgent.setFirstname(updatedAgent.getFirstname());
+			existingAgent.setLastname(updatedAgent.getLastname());
+			existingAgent.setQualification(updatedAgent.getQualification());
+			
+			User existingUser = userRepo.findById(existingAgent.getUser().getUserid()).orElse(null);
+			if(existingUser != null) {
+				existingUser.setUsername(updatedAgent.getUser().getUsername());
+				existingUser.setPassword(passwordEncoder.encode(updatedAgent.getUser().getPassword()));
+				existingAgent.setUser(existingUser);
+			}
+		}
+		return agentRepo.save(existingAgent);
 	}
 
 }
