@@ -1,6 +1,5 @@
 package com.techlabs.insurance.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Customer;
-import com.techlabs.insurance.entities.Policy;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.User_status;
 import com.techlabs.insurance.payload.RegisterDto;
@@ -97,5 +94,10 @@ public class CustomerServiceImpl implements CustomerService{
     		customerRepo.save(customer);
         }
     }
+	
+	@Override
+	public Customer getCustomerByUsername(String username) {
+		return customerRepo.findByUserUsername(username);
+	}
 	
 }

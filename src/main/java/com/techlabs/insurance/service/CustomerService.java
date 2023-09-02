@@ -13,4 +13,7 @@ public interface CustomerService {
 	public Customer updateCustomerStatus(int customerId, int newStatusId);
 	public void enableCustomerStatus(int customerId);
 	public void disableCustomerStatus(int customerId);
+
+	public Customer getCustomerByUsername(String username);
 }
+

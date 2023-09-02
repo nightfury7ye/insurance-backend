@@ -4,6 +4,7 @@ package com.techlabs.insurance.payload;
 import java.util.List;
 
 import com.techlabs.insurance.entities.Role;
+import com.techlabs.insurance.entities.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,5 +19,5 @@ public class JwtAuthResponse {
 	private String accessToken;
 	private String tokenType = "Bearer";
 	private List<Role> roles;
-//	private User user;
+	private User user;
 }

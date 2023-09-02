@@ -1,5 +1,7 @@
 package com.techlabs.insurance.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,14 +26,15 @@ public class Documents {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column
-	private int documentid;
+	private Long documentid;
 	@Column
-	private String documentname;
+	private String name;
 	@Column
-	private String doc_type;
+	private String type; 
 	@Column
-	private String documentpath;
+	private String path;
 	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="custid")
-	private Customer customenr;
+	@JsonIgnore
+	private Customer customer;
 }
