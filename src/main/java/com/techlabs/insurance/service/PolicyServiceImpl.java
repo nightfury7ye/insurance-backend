@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.techlabs.insurance.entities.Customer;
@@ -106,6 +110,7 @@ public class PolicyServiceImpl implements PolicyService{
 					payment.setDate(Date.valueOf(date1));
 					Optional<Payment_status> status= paymentStatusRepo.findById(1);
 					payment.setStatus(status.get());
+					payment.setAmount(policy.getPremiumamount());
 				}
 				else {
 					Payment emptyPayment = new Payment();
@@ -156,5 +161,11 @@ public class PolicyServiceImpl implements PolicyService{
 		Optional<Payment_status> status= paymentStatusRepo.findById(1);
 		dbpayment.setStatus(status.get());
 		return paymentRepo.save(dbpayment);
+	}
+
+	@Override
+	public Page<Policy> getPoliciesByCustomer(int customerid, int pageno, int pagesize) {
+		Pageable pageable = PageRequest.of(pageno, pagesize);
+		return policyRepo.findByCustomerCustomerid(customerid, pageable);
 	}
 }

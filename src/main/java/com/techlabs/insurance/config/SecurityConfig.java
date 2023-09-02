@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) ->                       
                         authorize.requestMatchers("/customerapp/**").permitAll()
                         		.requestMatchers("/servicesapp/**").permitAll()
+                        		.requestMatchers("/adminapp/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
 

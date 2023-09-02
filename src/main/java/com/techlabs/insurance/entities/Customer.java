@@ -2,6 +2,8 @@ package com.techlabs.insurance.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,6 +42,9 @@ public class Customer {
 	@Column
 	private long phoneno;
 	
+	@Column
+	private String documentStatus;
+	
 	@OneToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="addressid")
 	private Address address;
@@ -54,6 +59,7 @@ public class Customer {
 	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name="custid")
+	@JsonIgnore
 	private List<Policy> policy;
 	
 }

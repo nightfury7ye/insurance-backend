@@ -9,4 +9,6 @@ public interface CustomerService {
 	Page<Customer> getAllCustomers(int page, int size);
 	Customer getCustomerById(int customerId);
 	void deleteCustomer(int customerId);
+	public Customer getCustomerByUsername(String username);
 }
+
