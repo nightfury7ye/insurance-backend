@@ -61,25 +61,25 @@ public class CustomerServiceImpl implements CustomerService{
 	public Page<Customer> getAllDisabledCustomers(int page, int size) {
 		int disabledStatusId = 2;
 		Pageable pageable = PageRequest.of(page, size);
-		return customerRepo.findByStatusid(disabledStatusId, pageable);
+		return customerRepo.findByUserstatusStatusid(disabledStatusId, pageable);
 	}
 
 	@Override
 	public Customer updateCustomerStatus(int customerId, int newStatusId) {
 		Customer customer = customerRepo.findById(customerId).orElse(null);
-		User_status status = customer.getUser_status();
+		User_status status = customer.getUserstatus();
 		status.setStatusid(newStatusId);
-		customer.setUser_status(status);
+		customer.setUserstatus(status);
 		return customerRepo.save(customer);
 	}
 	
 	public void enableCustomerStatus(int customerId) {
 		int enabledStatus = 1;
 		Customer customer = customerRepo.findById(customerId).orElse(null);
-		User_status status = customer.getUser_status();
+		User_status status = customer.getUserstatus();
         if (status.getStatusid()==2) {
         	status.setStatusid(enabledStatus);
-        	customer.setUser_status(status);
+        	customer.setUserstatus(status);
     		customerRepo.save(customer);
         }
     }
@@ -87,10 +87,10 @@ public class CustomerServiceImpl implements CustomerService{
     public void disableCustomerStatus(int customerId) {
     	int disabledStatus = 2;
 		Customer customer = customerRepo.findById(customerId).orElse(null);
-		User_status status = customer.getUser_status();
+		User_status status = customer.getUserstatus();
         if (status.getStatusid()==1) {
         	status.setStatusid(disabledStatus);
-        	customer.setUser_status(status);
+        	customer.setUserstatus(status);
     		customerRepo.save(customer);
         }
     }
