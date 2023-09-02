@@ -1,6 +1,5 @@
 package com.techlabs.insurance.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +8,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Customer;
-import com.techlabs.insurance.entities.Policy;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.User_status;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.PolicyRepo;
 
-import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -64,7 +60,8 @@ public class CustomerServiceImpl implements CustomerService{
 	public Page<Customer> getAllDisabledCustomers(int page, int size) {
 		int disabledStatusId = 2;
 		Pageable pageable = PageRequest.of(page, size);
-		return customerRepo.findByStatusid(disabledStatusId, pageable);
+		//return customerRepo.findById(disabledStatusId);
+		return null;
 	}
 
 	@Override

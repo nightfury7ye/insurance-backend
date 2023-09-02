@@ -25,6 +25,7 @@ public class CustomerController {
 	@Autowired
 	private PolicyService policyService;
 	
+	@PreAuthorize("hasRole('CUSTOMER')")
 	@PostMapping("/register_customer")
 	public Customer registerCustomer(@RequestBody Customer customer) {
 		return customerService.registerCustomer(customer);
