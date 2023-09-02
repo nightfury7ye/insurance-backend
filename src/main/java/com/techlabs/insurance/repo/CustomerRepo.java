@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.techlabs.insurance.entities.Customer;
 
 public interface CustomerRepo extends JpaRepository<Customer, Integer>{
-    Page<Customer> findByUserstatusStatusid(int statusid, Pageable pageable);
-Customer findByUserUsername(String username);
+
+  Page<Customer> findByUserstatusStatusid(int statusid, Pageable pageable);
+
+  Customer findByUserUsername(String username);
 }
