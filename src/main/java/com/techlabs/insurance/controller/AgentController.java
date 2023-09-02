@@ -29,31 +29,31 @@ public class AgentController {
 	@Autowired PolicyService policyService;
 	
 	@PreAuthorize("hasRole('AGENT')")
-	@PostMapping("/register_agent")
+	@PostMapping("/registeragent")
 	public Agent registerAgent(@RequestBody Agent agent) {
 		return agentService.registerAgent(agent);
 	}
 	
 	@PreAuthorize("hasRole('AGENT')")
-	@GetMapping("/get_agent/{username}")
+	@GetMapping("/getagent/{username}")
 	public Agent getAgentByUsername(@PathVariable(name="username") String username) {
 		return agentService.getAgentByUsername(username);
 	}
 	
 	@PreAuthorize("hasRole('AGENT')")
-	@PutMapping("/update_agent/{username}")
+	@PutMapping("/updateagent/{username}")
 	public Agent updateAgentProfile(@PathVariable(name="username")String username, @RequestBody Agent updatedAgent) {
 		return agentService.updateAgentProfile(username, updatedAgent);
 	}
 	
 	@PreAuthorize("hasRole('AGENT')")
-	@PostMapping("/register_customer")
+	@PostMapping("/registercustomer")
 	public Customer registerCustomer(@RequestBody Customer customer) {
 		return customerService.registerCustomer(customer);
 	}
 	
 	@PreAuthorize("hasRole('AGENT')")
-	@PostMapping("/pay_first_installment/{policyid}")
+	@PostMapping("/firstinstallment/{policyid}")
 	public List<Payment> payFirstInstallment(@PathVariable(name="policyid") int policyid,@RequestBody Payment payment){
 		return policyService.payFirstInstallment(policyid, payment);
 	}

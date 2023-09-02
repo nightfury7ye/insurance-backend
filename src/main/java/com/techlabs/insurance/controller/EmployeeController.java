@@ -31,61 +31,61 @@ public class EmployeeController {
 	private EmployeeService employeeService;
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@PostMapping("/save_agent/{statusid}")
+	@PostMapping("/saveagent/{statusid}")
 	Agent addAgent(@RequestBody Agent agent, @PathVariable(name="statusid")int statusId) {
 		return agentService.addAgent(agent, statusId);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@DeleteMapping("/delete_agent/{agentid}")
+	@DeleteMapping("/deleteagent/{agentid}")
 	public void deleteAgent(@PathVariable(name="agentid")int agentId) {
 		agentService.deleteAgent(agentId);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@PutMapping("/update_agentstatus/{agentid}/{statusid}")
+	@PutMapping("/updateagentstatus/{agentid}/{statusid}")
 	public Agent updateAgentStatus(@PathVariable(name="agentid")int agentId, @PathVariable(name="statusid")int statusId) {
 		return agentService.updateAgentStatus(agentId, statusId);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@GetMapping("/get_all_agents")
+	@GetMapping("/getagents")
 	public Page<Agent> getAllAgents(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		return agentService.getAllAgents(page, size);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@GetMapping("/get_all_customers")
+	@GetMapping("/getcustomers")
 	public Page<Customer> getAllCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		return customerService.getAllCustomers(page, size);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@GetMapping("/get_customer/{customerid}")
+	@GetMapping("/getcustomer/{customerid}")
 	public void getCustomerById(@PathVariable(name="customerid")int customerId) {
 		customerService.getCustomerById(customerId);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@DeleteMapping("/delete_customer/{customerid}")
+	@DeleteMapping("/deletecustomer/{customerid}")
 	public void deleteCustomer(@PathVariable(name="customerid")int customerId) {
 		customerService.deleteCustomer(customerId);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@PutMapping("/update_employee/{employeeid}")
+	@PutMapping("/updateemployee/{employeeid}")
 	public void updateEmployee(@PathVariable(name="employeeid")int employeeId, @RequestBody Employee updatedEmployee) {
 		employeeService.updateEmployee(employeeId, updatedEmployee);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@GetMapping("/disabled_customers")
+	@GetMapping("/disabledcustomers")
 	public Page<Customer> getAllDisabledCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		return customerService.getAllDisabledCustomers(page, size);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@PutMapping("/update_customer_status/{customerid}/{statusid}")
+	@PutMapping("/updatecustomerstatus/{customerid}/{statusid}")
 	public Customer updateCustomerStatus(@PathVariable(name="customerid")int customerId, @PathVariable(name="statusid")int statusId) {
 		return customerService.updateCustomerStatus(customerId, statusId);
 	}

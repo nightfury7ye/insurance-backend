@@ -31,18 +31,19 @@ public class CustomerController {
 	private PolicyService policyService;
 	
 	@PreAuthorize("hasRole('CUSTOMER')")
-	@PostMapping("/register_customer")
+	@PostMapping("/registercustomer")
 	public Customer registerCustomer(@RequestBody Customer customer) {
 		return customerService.registerCustomer(customer);
 	}
 	
-	@GetMapping("/get_customer_by_username/{username}")
+	@PreAuthorize("hasRole('CUSTOMER')")
+	@GetMapping("/getcustomer/{username}")
 	public Customer getCustomerByUsername(@PathVariable(name="username") String username) {
 		return customerService.getCustomerByUsername(username);
 	}
 	
 	@PreAuthorize("hasRole('CUSTOMER')")
-	@GetMapping("/get_policies_by_customer/{customerid}")
+	@GetMapping("/getpolicies/{customerid}")
 	public ResponseEntity<Page<Policy>> getPoliciesByCustomer(@PathVariable(name="customerid") int customerid, @RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		Page<Policy> policies = policyService.getPoliciesByCustomer(customerid, page, size);
 		if(!policies.isEmpty())
@@ -51,19 +52,19 @@ public class CustomerController {
 	}
 	
 	@PreAuthorize("hasRole('CUSTOMER')")
-	@PostMapping("/purchase_policy/{customerid}/{schemeid}/{investtime}/{typeid}/{statusid}")
+	@PostMapping("/purchasepolicy/{customerid}/{schemeid}/{investtime}/{typeid}/{statusid}")
 	Policy purchasePolicy(@RequestBody Policy policy,@PathVariable(name="customerid") int customerid ,@PathVariable(name="schemeid") int schemeid,@PathVariable(name="investtime") int investtime,@PathVariable(name="typeid") int typeid,@PathVariable(name="statusid") int statusid) {
 		return policyService.purchasePolicy(policy, customerid, schemeid, investtime, typeid,statusid);
 	}
 	
 	@PreAuthorize("hasRole('CUSTOMER')")
-	@PostMapping("/pay_first_installment/{policyid}")
+	@PostMapping("/firstinstallment/{policyid}")
 	public List<Payment> payFirstInstallment(@PathVariable(name="policyid") int policyid,@RequestBody Payment payment){
 		return policyService.payFirstInstallment(policyid, payment);
 	}
 	
 	@PreAuthorize("hasRole('CUSTOMER')")
-	@PostMapping("/pay_installment/{paymentid}")
+	@PostMapping("/payinstallment/{paymentid}")
 	public Payment payInstallment(@RequestBody Payment payment ,@PathVariable(name="paymentid") int paymentid) {
 		return policyService.payInstallment(payment, paymentid);
 	}

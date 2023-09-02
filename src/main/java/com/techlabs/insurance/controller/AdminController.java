@@ -38,73 +38,73 @@ public class AdminController {
 	private CustomerService customerService;
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/save_employee")
+	@PostMapping("/employee")
 	Employee saveEmployee(@RequestBody Employee employee) {
 		return employeeService.saveEmployee(employee);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/get_all_employees")
+	@GetMapping("/employees")
 	public Page<Employee> getAllEmployees(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		return employeeService.getAllEmployees(page, size);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/save_insuranceplan/{statusid}")
+	@PostMapping("/saveinsuranceplan/{statusid}")
 	public InsurancePlan saveInsurancePlan(@RequestBody InsurancePlan insurancePlan,@PathVariable(name="statusid") int statusid) {
 		return insurancePlanService.saveInsurancePlan(insurancePlan, statusid);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update_insuranceplan/{planid}/{statusid}")
+	@PutMapping("/updateinsuranceplan/{planid}/{statusid}")
 	InsurancePlan updateInsurancePlan(@RequestBody InsurancePlan insurancePlanData,@PathVariable(name="planid") int planid,@PathVariable(name="statusid") int statusid) {
 		return insurancePlanService.updateInsurancePlan(insurancePlanData, planid, statusid);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete_insuranceplan/{planid}")
+	@DeleteMapping("/deleteinsuranceplan/{planid}")
 	String deleteInsurancePlan(@PathVariable(name="planid") int planid) {
 		return insurancePlanService.deleteInsurancePlan(planid);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/get_scheme_by_planid/{planid}")
+	@GetMapping("/getscheme/{planid}")
 	List<InsuranceScheme> getInsuranceSchemeById(@PathVariable(name="planid") int planid){
 		return insurancePlanService.getInsuranceSchemeById(planid);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping("/update_insurance_scheme/{schemeid}/{statusid}")
+	@PutMapping("/updateinsurancescheme/{schemeid}/{statusid}")
 	InsuranceScheme updateInsuranceScheme(@RequestBody InsuranceScheme insuranceSchemeData,@PathVariable(name="schemeid") int schemeid,@PathVariable(name="statusid") int statusid) {
 		return insuranceSchemeService.updateInsuranceScheme(insuranceSchemeData, schemeid, statusid);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete_insurance_scheme/{schemeid}")
+	@DeleteMapping("/deleteinsurancescheme/{schemeid}")
 	public String deleteInsuranceScheme(@PathVariable(name="schemeid") int schemeid) {
 		return insuranceSchemeService.deleteInsuranceScheme(schemeid);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/save_insurance_scheme/{planid}/{statusid}")
+	@PostMapping("/saveinsurancescheme/{planid}/{statusid}")
 	public InsuranceScheme saveInsuranceScheme(@RequestBody InsuranceScheme insuranceScheme,@PathVariable(name="planid") int planid,@PathVariable(name="statusid") int statusid) {
 		return insuranceSchemeService.saveInsuranceScheme(insuranceScheme, planid, statusid);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/get_insurance_plans")
+	@GetMapping("/getinsuranceplans")
 	public List<InsurancePlan> getInsurancePlans() {
 		return insurancePlanService.getInsurancePlans();
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping("/getallcustomers")
+	@GetMapping("/getcustomers")
 	public Page<Customer> getAllCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		return customerService.getAllCustomers(page, size);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/delete_employee/{employeeid}")
+	@DeleteMapping("/deleteemployee/{employeeid}")
 	public void deleteCustomer(@PathVariable(name="employeeid")int employeeId) {
 		employeeService.deleteEmployee(employeeId);
 	}

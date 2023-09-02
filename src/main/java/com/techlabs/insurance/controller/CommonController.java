@@ -40,12 +40,12 @@ public class CommonController {
 	@Autowired
 	private CustomerRepo customerRepo;
 	
-	@GetMapping("/get_plans")
+	@GetMapping("/getplans")
 	public List<InsurancePlan> getInsurancePlans() {
 		return insurancePlanService.getInsurancePlans();
 	}
 	
-	@GetMapping("/get_scheme_by_planid/{planid}")
+	@GetMapping("/getscheme/{planid}")
 	List<InsuranceScheme> getInsuranceSchemeById(@PathVariable(name="planid") int planid){
 		return insurancePlanService.getInsuranceSchemeById(planid);
 	}
