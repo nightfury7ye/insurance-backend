@@ -40,7 +40,7 @@ public class AuthController {
 		JwtAuthResponse jwtAuthResponse =new JwtAuthResponse();
 		jwtAuthResponse.setAccessToken(token);
 		if(user.isPresent()) {
-//			jwtAuthResponse.setUser(user.get());
+			jwtAuthResponse.setUser(user.get());
 			jwtAuthResponse.setRoles(user.get().getRoles());
 		}
 		return ResponseEntity.ok(jwtAuthResponse);
