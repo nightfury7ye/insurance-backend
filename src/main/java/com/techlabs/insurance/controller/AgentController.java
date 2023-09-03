@@ -2,6 +2,7 @@ package com.techlabs.insurance.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,7 +54,7 @@ public class AgentController {
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	@GetMapping("/users/agents")
-	public Page<Agent> getAllAgents(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
+	public ResponseEntity<Page<Agent>> getAllAgents(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		return agentService.getAllAgents(page, size); 
 	}
 	

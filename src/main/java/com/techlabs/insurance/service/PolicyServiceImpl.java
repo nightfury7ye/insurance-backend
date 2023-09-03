@@ -12,9 +12,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.techlabs.insurance.entities.Customer;
+import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.InstallmentType;
 import com.techlabs.insurance.entities.InsuranceScheme;
 import com.techlabs.insurance.entities.Payment;
@@ -23,6 +25,7 @@ import com.techlabs.insurance.entities.Policy;
 import com.techlabs.insurance.entities.Status;
 import com.techlabs.insurance.exception.InsurancePlanNotFoundException;
 import com.techlabs.insurance.exception.InsuranceSchemeNotFoundException;
+import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.PolicyNotFoundException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.repo.CustomerRepo;
@@ -169,9 +172,13 @@ public class PolicyServiceImpl implements PolicyService{
 	}
 
 	@Override
-	public Page<Policy> getPoliciesByCustomer(int customerid, int pageno, int pagesize) {
+	public ResponseEntity<Page<Policy>> getPoliciesByCustomer(int customerid, int pageno, int pagesize) {
 		Pageable pageable = PageRequest.of(pageno, pagesize);
-		return policyRepo.findByCustomerCustomerid(customerid, pageable);
+		Page<Policy> policies =policyRepo.findAll(pageable);
+		if(policies.isEmpty()) {
+			throw new ListIsEmptyException(HttpStatus.BAD_REQUEST, "Policies List Is Empty!!!");
+		}
+		return new ResponseEntity<>(policies,HttpStatus.OK) ;
 	}
 
 	@Override

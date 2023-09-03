@@ -7,11 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.techlabs.insurance.entities.Customer;
+import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.User_status;
+import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.CustomerRepo;
@@ -44,9 +47,13 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public Page<Customer> getAllCustomers(int page, int size) {
+	public ResponseEntity<Page<Customer>> getAllCustomers(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return customerRepo.findAll(pageable);
+		Page<Customer> customers =customerRepo.findAll(pageable);
+		if(customers.isEmpty()) {
+			throw new ListIsEmptyException(HttpStatus.BAD_REQUEST, "Employee List Is Empty!!!");
+		}
+		return new ResponseEntity<>(customers,HttpStatus.OK) ;
 	}
 
 	@Override

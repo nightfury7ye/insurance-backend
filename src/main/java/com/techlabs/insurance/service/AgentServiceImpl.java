@@ -9,14 +9,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.techlabs.insurance.entities.Agent;
+import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.User_status;
+import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.AgentRepo;
@@ -89,9 +92,13 @@ public class AgentServiceImpl implements AgentService{
 	}
 
 	@Override
-	public Page<Agent> getAllAgents(int page, int size) {
+	public ResponseEntity<Page<Agent>> getAllAgents(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return agentRepo.findAll(pageable);
+		Page<Agent> agents =agentRepo.findAll(pageable);
+		if(agents.isEmpty()) {
+			throw new ListIsEmptyException(HttpStatus.BAD_REQUEST, "Agents List Is Empty!!!");
+		}
+		return new ResponseEntity<>(agents,HttpStatus.OK) ;
 	}
 
 	@Override
@@ -125,6 +132,8 @@ public class AgentServiceImpl implements AgentService{
 				}
 				existingAgent.setUser(existingUser);
 			}
+		}else {
+			throw new UserAPIException(HttpStatus.BAD_REQUEST, "Agent Not Found!!!");
 		}
 		return agentRepo.save(existingAgent);
 	}

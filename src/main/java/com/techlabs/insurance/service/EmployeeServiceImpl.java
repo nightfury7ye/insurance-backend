@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
+import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.repo.EmployeeRepo;
 import com.techlabs.insurance.repo.RoleRepo;
@@ -53,9 +55,13 @@ public class EmployeeServiceImpl implements EmployeeService{
 	}
 
 	@Override
-	public Page<Employee> getAllEmployees(int page, int size) {
+	public ResponseEntity<Page<Employee>> getAllEmployees(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return employeeRepo.findAll(pageable);
+		Page<Employee> employees =employeeRepo.findAll(pageable);
+		if(employees.isEmpty()) {
+			throw new ListIsEmptyException(HttpStatus.BAD_REQUEST, "Employee List Is Empty!!!");
+		}
+		return new ResponseEntity<>(employees,HttpStatus.OK) ;
 	}
 
 	@Override

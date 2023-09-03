@@ -3,6 +3,7 @@ package com.techlabs.insurance.service;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 
 import com.techlabs.insurance.entities.Payment;
 import com.techlabs.insurance.entities.Policy;
@@ -14,7 +15,7 @@ public interface PolicyService {
 	
 	Payment payInstallment(Payment payment ,int paymentid);
 	
-	Page<Policy> getPoliciesByCustomer(int customerid, int pageno, int pagesize);
+	ResponseEntity<Page<Policy>> getPoliciesByCustomer(int customerid, int pageno, int pagesize);
 	
 	Policy getPolicy(int policyid);
 }

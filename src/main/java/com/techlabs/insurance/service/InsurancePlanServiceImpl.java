@@ -75,7 +75,7 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 	public List<InsuranceScheme> getInsuranceSchemeById(int planid) {
 		InsurancePlan insurancePlan = insurancePlanRepo.findById(planid).orElseThrow(()-> new InsurancePlanNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Plan Not Found!!!"));
 		
-			return insurancePlan.getSchemes();
+		return insurancePlan.getSchemes();
 	}
 
 }
