@@ -25,10 +25,7 @@ public class PolicyController {
 	@PreAuthorize("hasRole('CUSTOMER')")
 	@GetMapping("customer/{customerid}/policies")
 	public ResponseEntity<Page<Policy>> getPoliciesByCustomer(@PathVariable(name="customerid") int customerid, @RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
-		Page<Policy> policies = policyService.getPoliciesByCustomer(customerid, page, size);
-		if(!policies.isEmpty())
-			return new ResponseEntity<>(policies, HttpStatus.OK);
-		return null; 
+		return policyService.getPoliciesByCustomer(customerid, page, size); 
 	}
 	
 	@PreAuthorize("hasRole('CUSTOMER')")

@@ -11,15 +11,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.techlabs.insurance.entities.Customer;
+import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.InstallmentType;
 import com.techlabs.insurance.entities.InsuranceScheme;
 import com.techlabs.insurance.entities.Payment;
 import com.techlabs.insurance.entities.Payment_status;
 import com.techlabs.insurance.entities.Policy;
 import com.techlabs.insurance.entities.Status;
+import com.techlabs.insurance.exception.InsurancePlanNotFoundException;
+import com.techlabs.insurance.exception.InsuranceSchemeNotFoundException;
+import com.techlabs.insurance.exception.ListIsEmptyException;
+import com.techlabs.insurance.exception.PolicyNotFoundException;
+import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.InstallmentTypeRepo;
 import com.techlabs.insurance.repo.InsuranceSchemeRepo;
@@ -53,8 +61,8 @@ public class PolicyServiceImpl implements PolicyService{
 	public Policy purchasePolicy(Policy policy, int customerid ,int schemeid,int investtime, int typeid, int statusid) {
 		LocalDate currentDate = LocalDate.now();
 		LocalDate incrementedDate = currentDate.plusYears(investtime);
-		Optional<InsuranceScheme> insuranceScheme = schemeRepo.findById(schemeid);
-		Optional<Customer> customer = customerRepo.findById(customerid);
+		InsuranceScheme insuranceScheme = schemeRepo.findById(schemeid).orElseThrow(()-> new InsuranceSchemeNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Scheme Not Found!!!"));
+		Customer customer = customerRepo.findById(customerid).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Customer Not Found!!!"));;
 		Optional<InstallmentType> installmentType = typeRepo.findById(typeid);
 		Optional<Status> status = statusRepo.findById(statusid);
 		if(status.isPresent()) {
@@ -62,8 +70,8 @@ public class PolicyServiceImpl implements PolicyService{
 		}else {
 			policy.setStatus(statusRepo.findById(1).get());
 		}
-		policy.setCustomer(customer.get());
-		policy.setInsuranceScheme(insuranceScheme.get());
+		policy.setCustomer(customer);
+		policy.setInsuranceScheme(insuranceScheme);
 		policy.setIssuedate(Date.valueOf(currentDate));
 		policy.setMaturitydate(Date.valueOf(incrementedDate));
 		policy.setInstallmentType(installmentType.get());
@@ -74,7 +82,7 @@ public class PolicyServiceImpl implements PolicyService{
 	public List<Payment> payFirstinstallment(int policyid, Payment payment) {
 		LocalDate date1 = LocalDate.now();
 		int count = 0;
-		Policy policy = (policyRepo.findById(policyid)).get();
+		Policy policy = policyRepo.findById(policyid).orElseThrow(()-> new PolicyNotFoundException(HttpStatus.BAD_REQUEST,"Policy Plan Not Found!!!"));
 		LocalDate issueDate = policy.getIssuedate().toLocalDate();
 		LocalDate maturityDate = policy.getMaturitydate().toLocalDate();
 		Period period = issueDate.until(maturityDate);
@@ -164,17 +172,19 @@ public class PolicyServiceImpl implements PolicyService{
 	}
 
 	@Override
-	public Page<Policy> getPoliciesByCustomer(int customerid, int pageno, int pagesize) {
+	public ResponseEntity<Page<Policy>> getPoliciesByCustomer(int customerid, int pageno, int pagesize) {
 		Pageable pageable = PageRequest.of(pageno, pagesize);
-		return policyRepo.findByCustomerCustomerid(customerid, pageable);
+		Page<Policy> policies =policyRepo.findAll(pageable);
+		if(policies.isEmpty()) {
+			throw new ListIsEmptyException(HttpStatus.BAD_REQUEST, "Policies List Is Empty!!!");
+		}
+		return new ResponseEntity<>(policies,HttpStatus.OK) ;
 	}
 
 	@Override
 	public Policy getPolicy(int policyid) {
-		Optional<Policy> policy = policyRepo.findById(policyid);
-		if(policy.isPresent()) {
-			return policy.get();
-		}
-		return null;
+		Policy policy = policyRepo.findById(policyid).orElseThrow(()-> new InsuranceSchemeNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Scheme Not Found!!!"));;
+		return policy;
+		
 	}
 }

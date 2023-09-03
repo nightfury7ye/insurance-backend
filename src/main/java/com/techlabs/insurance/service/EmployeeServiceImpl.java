@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
+import com.techlabs.insurance.exception.ListIsEmptyException;
+import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.repo.EmployeeRepo;
 import com.techlabs.insurance.repo.RoleRepo;
 import com.techlabs.insurance.repo.UserRepo;
@@ -51,33 +55,43 @@ public class EmployeeServiceImpl implements EmployeeService{
 	}
 
 	@Override
-	public Page<Employee> getAllEmployees(int page, int size) {
+	public ResponseEntity<Page<Employee>> getAllEmployees(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
-		return employeeRepo.findAll(pageable);
+		Page<Employee> employees =employeeRepo.findAll(pageable);
+		if(employees.isEmpty()) {
+			throw new ListIsEmptyException(HttpStatus.BAD_REQUEST, "Employee List Is Empty!!!");
+		}
+		return new ResponseEntity<>(employees,HttpStatus.OK) ;
 	}
 
 	@Override
 	public Employee updateEmployee(int employeeId, Employee updatedEmployee) {
-		Employee existingEmployee = employeeRepo.findById(employeeId).orElse(null);
+		Employee existingEmployee = employeeRepo.findById(employeeId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Employee Not Found!!!"));
 		if(existingEmployee != null) {
 			existingEmployee.setFirstname(updatedEmployee.getFirstname());
 			existingEmployee.setLastname(updatedEmployee.getLastname());
 			
-			User existingUser = userRepo.findById(existingEmployee.getUser().getUserid()).orElse(null);
+			User existingUser = userRepo.findById(existingEmployee.getUser().getUserid()).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"User Not Found!!!"));
 			if(existingUser != null) {
 				existingUser.setUsername(updatedEmployee.getUser().getUsername());
-				existingUser.setPassword(passwordEncoder.encode(updatedEmployee.getUser().getPassword()));
+				if(updatedEmployee.getUser().getPassword() != null) {
+					existingUser.setPassword(passwordEncoder.encode(updatedEmployee.getUser().getPassword()));
+				}
 				existingEmployee.setUser(existingUser);
 			}
 			
-			return employeeRepo.save(existingEmployee);
 		}
-		return null;
+		return employeeRepo.save(existingEmployee);
 	}
 
 	@Override
 	public void deleteEmployee(int employeeId) {
-		employeeRepo.deleteById(employeeId);
+		try {
+			employeeRepo.deleteById(employeeId);
+		}catch (UserAPIException e) {
+			throw new UserAPIException(HttpStatus.BAD_REQUEST, "Employee Not Found");
+		}
+		
 		
 	}
 	

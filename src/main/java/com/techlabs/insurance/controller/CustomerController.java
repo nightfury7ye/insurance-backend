@@ -34,14 +34,14 @@ public class CustomerController {
 		return customerService.getCustomerByUsername(username);
 	}
 	
-	@PreAuthorize("hasRole('EMPLOYEE')")
+	//@PreAuthorize("hasRole('EMPLOYEE')")
 	@GetMapping("/users/customer/{customerid}")
 	public void getCustomerById(@PathVariable(name="customerid")int customerId) {
 		customerService.getCustomerById(customerId);
 	}
 	
 	@GetMapping("users/customers")
-	public Page<Customer> getAllCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
+	public ResponseEntity<Page<Customer>> getAllCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		return customerService.getAllCustomers(page, size);
 	}
 	

@@ -3,6 +3,7 @@ package com.techlabs.insurance.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -10,6 +11,8 @@ import com.techlabs.insurance.entities.InsurancePlan;
 import com.techlabs.insurance.entities.InsuranceScheme;
 import com.techlabs.insurance.entities.SchemeDetails;
 import com.techlabs.insurance.entities.Status;
+import com.techlabs.insurance.exception.InsurancePlanNotFoundException;
+import com.techlabs.insurance.exception.InsuranceSchemeNotFoundException;
 import com.techlabs.insurance.repo.InsurancePlanRepo;
 import com.techlabs.insurance.repo.InsuranceSchemeRepo;
 import com.techlabs.insurance.repo.StatusRepo;
@@ -30,19 +33,18 @@ public class InsuranceSchemeServiceImpl implements InsuranceSchemeService{
 	@Override
 	public InsuranceScheme saveInsuranceScheme(InsuranceScheme insuranceScheme, int planid, int statusid) {
 		System.out.println("At saveInsuranceScheme Before");
-		Optional<InsurancePlan> insurancePlan = insurancePlanRepo.findById(planid);
+		InsurancePlan insurancePlan = insurancePlanRepo.findById(planid).orElseThrow(()-> new InsurancePlanNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Plan Not Found!!!"));
 		Optional<Status> status = statusRepo.findById(statusid);
 		if(status.isPresent()) {
 			insuranceScheme.setStatus(status.get());
 		}else {
 			insuranceScheme.setStatus(statusRepo.findById(1).get());
 		}
-		if(insurancePlan.isPresent()) {
-			insuranceScheme.setPlan(insurancePlan.get());
-			System.out.println("At saveInsuranceScheme After");
-			return insuranceSchemeRepo.save(insuranceScheme);
-		}
-		return null;
+		insuranceScheme.setPlan(insurancePlan);
+		System.out.println("At saveInsuranceScheme After");
+		
+		return insuranceSchemeRepo.save(insuranceScheme);
+	
 	}
 	
 	@Override
@@ -57,10 +59,9 @@ public class InsuranceSchemeServiceImpl implements InsuranceSchemeService{
 
 	@Override
 	public InsuranceScheme updateInsuranceScheme(InsuranceScheme insuranceSchemeData, int schemeid, int statusid) {
-		Optional<InsuranceScheme> insuranceScheme = insuranceSchemeRepo.findById(schemeid);
+		InsuranceScheme insuranceScheme = insuranceSchemeRepo.findById(schemeid).orElseThrow(()-> new InsuranceSchemeNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Scheme Not Found!!!"));
 		Optional<Status> status = statusRepo.findById(statusid);
-		if(insuranceScheme.isPresent()) {
-			InsuranceScheme existingInsuranceScheme = insuranceScheme.get();
+			InsuranceScheme existingInsuranceScheme = insuranceScheme;
 	        
 	        existingInsuranceScheme.setScheme_name(insuranceSchemeData.getScheme_name());
 	        
@@ -86,7 +87,5 @@ public class InsuranceSchemeServiceImpl implements InsuranceSchemeService{
 	        }
 	        
 	        return insuranceSchemeRepo.save(existingInsuranceScheme);
-		}
-		return null;
 	}
 }
