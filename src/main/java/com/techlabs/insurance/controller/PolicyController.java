@@ -40,9 +40,9 @@ public class PolicyController {
 		return null; 
 	}
 	
-	@PreAuthorize("hasRole('CUSTOMER')")
 	@PostMapping("customer/{customerid}/policy")
-	Policy purchasePolicy(@RequestBody Policy policy,@PathVariable(name="customerid") int customerid ,@RequestParam(name="schemeid") int schemeid,@RequestParam(name="investtime") int investtime,@RequestParam(name="typeid") int typeid,@RequestParam(name="statusid") int statusid) {
+	Policy purchasePolicy(@RequestBody Policy policy,@PathVariable(name="customerid") int customerid ,@RequestParam(name="schemeid") int schemeid,
+			@RequestParam(name="investtime") int investtime,@RequestParam(name="typeid") int typeid,@RequestParam(name="statusid") int statusid) {
 		return policyService.purchasePolicy(policy, customerid, schemeid, investtime, typeid,statusid);
 	}
 }

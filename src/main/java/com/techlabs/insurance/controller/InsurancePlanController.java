@@ -43,7 +43,6 @@ public class InsurancePlanController {
 	}
 	
 	
-	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/insurance-plans")
 	public List<InsurancePlan> getInsurancePlans() {
 		return insurancePlanService.getInsurancePlans();
