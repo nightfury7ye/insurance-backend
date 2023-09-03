@@ -47,9 +47,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->                       
-                        authorize.requestMatchers("/customerapp/**").permitAll()
-                        		.requestMatchers("/servicesapp/**").permitAll()
-                        		.requestMatchers("/adminapp/**").permitAll()
+                        authorize.requestMatchers("/insurance-app/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
 

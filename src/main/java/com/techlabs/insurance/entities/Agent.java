@@ -48,7 +48,7 @@ public class Agent {
 	@JoinColumn(name="agentid")
 	private List<Policy> policy;
 	
-	@ManyToOne(cascade= CascadeType.ALL)
+	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="statusid")
 	User_status user_status;
 	

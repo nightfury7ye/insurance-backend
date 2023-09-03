@@ -14,6 +14,7 @@ import com.techlabs.insurance.entities.User_status;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.PolicyRepo;
+import com.techlabs.insurance.repo.UserStatusRepo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +28,8 @@ public class CustomerServiceImpl implements CustomerService{
 	private CustomerRepo customerRepo;
 	@Autowired
 	private PolicyRepo policyRepo;
+	@Autowired
+	private UserStatusRepo userStatusRepo;
 	
 	@Override
 	public Customer registerCustomer(Customer customer) {
@@ -60,20 +63,18 @@ public class CustomerServiceImpl implements CustomerService{
 	public Page<Customer> getAllDisabledCustomers(int page, int size) {
 		int disabledStatusId = 2;
 		Pageable pageable = PageRequest.of(page, size);
-<<<<<<< HEAD
+
 		return customerRepo.findByUserstatusStatusid(disabledStatusId, pageable);
-=======
 		//return customerRepo.findById(disabledStatusId);
-		return null;
->>>>>>> 7f03db4f67c5e270770be44df1df193d4aa305c6
 	}
 
 	@Override
 	public Customer updateCustomerStatus(int customerId, int newStatusId) {
 		Customer customer = customerRepo.findById(customerId).orElse(null);
-		User_status status = customer.getUserstatus();
-		status.setStatusid(newStatusId);
-		customer.setUserstatus(status);
+		Optional<User_status> status = userStatusRepo.findById(newStatusId);
+		if(status.isPresent()){
+			customer.setUserstatus(status.get());
+		}
 		return customerRepo.save(customer);
 	}
 	

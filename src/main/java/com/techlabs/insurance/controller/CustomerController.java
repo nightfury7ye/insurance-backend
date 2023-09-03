@@ -1,71 +1,80 @@
 package com.techlabs.insurance.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.techlabs.insurance.entities.Customer;
-import com.techlabs.insurance.entities.Payment;
-import com.techlabs.insurance.entities.Policy;
 import com.techlabs.insurance.service.CustomerService;
-import com.techlabs.insurance.service.PolicyService;
 
 @RestController
-@RequestMapping("/customerapp")
+@RequestMapping("/insurance-app")
 public class CustomerController {
 
 	@Autowired
 	private CustomerService customerService;
-	@Autowired
-	private PolicyService policyService;
 	
-	@PreAuthorize("hasRole('CUSTOMER')")
-	@PostMapping("/register_customer")
+	@PostMapping("/users/customer")
 	public Customer registerCustomer(@RequestBody Customer customer) {
 		return customerService.registerCustomer(customer);
 	}
 	
-	@GetMapping("/get_customer_by_username/{username}")
-	public Customer getCustomerByUsername(@PathVariable(name="username") String username) {
+	@GetMapping("/users/customer")
+	public Customer getCustomerByUsername(@RequestParam(name="username") String username) {
 		return customerService.getCustomerByUsername(username);
 	}
 	
-	@PreAuthorize("hasRole('CUSTOMER')")
-	@GetMapping("/get_policies_by_customer/{customerid}")
-	public ResponseEntity<Page<Policy>> getPoliciesByCustomer(@PathVariable(name="customerid") int customerid, @RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
-		Page<Policy> policies = policyService.getPoliciesByCustomer(customerid, page, size);
-		if(!policies.isEmpty())
-			return new ResponseEntity<>(policies, HttpStatus.OK);
-		return null; 
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	@GetMapping("/users/customer/{customerid}")
+	public void getCustomerById(@PathVariable(name="customerid")int customerId) {
+		customerService.getCustomerById(customerId);
 	}
 	
-	@PreAuthorize("hasRole('CUSTOMER')")
-	@PostMapping("/purchase_policy/{customerid}/{schemeid}/{investtime}/{typeid}/{statusid}")
-	Policy purchasePolicy(@RequestBody Policy policy,@PathVariable(name="customerid") int customerid ,@PathVariable(name="schemeid") int schemeid,@PathVariable(name="investtime") int investtime,@PathVariable(name="typeid") int typeid,@PathVariable(name="statusid") int statusid) {
-		return policyService.purchasePolicy(policy, customerid, schemeid, investtime, typeid,statusid);
+	@GetMapping("users/customers")
+	public Page<Customer> getAllCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
+		return customerService.getAllCustomers(page, size);
 	}
 	
-	@PreAuthorize("hasRole('CUSTOMER')")
-	@PostMapping("/pay_first_installment/{policyid}")
-	public List<Payment> payFirstinstallment(@PathVariable(name="policyid") int policyid,@RequestBody Payment payment){
-		return policyService.payFirstinstallment(policyid, payment);
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	@DeleteMapping("/users/customer/{customerid}")
+	public void deleteCustomer(@PathVariable(name="customerid")int customerId) {
+		customerService.deleteCustomer(customerId);
 	}
 	
-	@PreAuthorize("hasRole('CUSTOMER')")
-	@PostMapping("/pay_installment/{paymentid}")
-	public Payment payInstallment(@RequestBody Payment payment ,@PathVariable(name="paymentid") int paymentid) {
-		return policyService.payInstallment(payment, paymentid);
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	@GetMapping("/disabled_customers")
+	public Page<Customer> getAllDisabledCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
+		return customerService.getAllDisabledCustomers(page, size);
 	}
+	
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	@PutMapping("/users/customer/{customerid}/status/{statusid}")
+	public Customer updateCustomerStatus(@PathVariable(name="customerid")int customerId, @PathVariable(name="statusid")int statusId) {
+		return customerService.updateCustomerStatus(customerId, statusId);
+	}
+	
+//	@PreAuthorize("hasRole('ADMIN')")
+//	@PostMapping("/enablecustomer/{customerId}")
+//    public ResponseEntity<String> enableCustomer(@PathVariable(name="customerId") int customerId) {
+//        customerService.enableCustomerStatus(customerId);
+//        return ResponseEntity.ok("Customer status enabled");
+//    }
+//
+//	@PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/disablecustomer/{customerId}")
+//    public ResponseEntity<String> disableCustomer(@PathVariable(name="customerId") int customerId) {
+//        customerService.disableCustomerStatus(customerId);
+//        return ResponseEntity.ok("Customer status disabled");
+//    }
 	
 }

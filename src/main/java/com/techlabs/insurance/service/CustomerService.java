@@ -3,6 +3,7 @@ package com.techlabs.insurance.service;
 import org.springframework.data.domain.Page;
 
 import com.techlabs.insurance.entities.Customer;
+import com.techlabs.insurance.entities.Policy;
 
 public interface CustomerService {
 	public Customer registerCustomer(Customer customer);

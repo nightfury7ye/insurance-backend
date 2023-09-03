@@ -15,4 +15,6 @@ public interface PolicyService {
 	Payment payInstallment(Payment payment ,int paymentid);
 	
 	Page<Policy> getPoliciesByCustomer(int customerid, int pageno, int pagesize);
+	
+	Policy getPolicy(int policyid);
 }

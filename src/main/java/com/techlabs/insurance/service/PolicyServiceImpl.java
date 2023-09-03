@@ -168,4 +168,13 @@ public class PolicyServiceImpl implements PolicyService{
 		Pageable pageable = PageRequest.of(pageno, pagesize);
 		return policyRepo.findByCustomerCustomerid(customerid, pageable);
 	}
+
+	@Override
+	public Policy getPolicy(int policyid) {
+		Optional<Policy> policy = policyRepo.findById(policyid);
+		if(policy.isPresent()) {
+			return policy.get();
+		}
+		return null;
+	}
 }

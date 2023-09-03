@@ -118,7 +118,9 @@ public class AgentServiceImpl implements AgentService{
 			User existingUser = userRepo.findById(existingAgent.getUser().getUserid()).orElse(null);
 			if(existingUser != null) {
 				existingUser.setUsername(updatedAgent.getUser().getUsername());
-				existingUser.setPassword(passwordEncoder.encode(updatedAgent.getUser().getPassword()));
+				if(updatedAgent.getUser().getPassword() != null) {
+					existingUser.setPassword(passwordEncoder.encode(updatedAgent.getUser().getPassword()));
+				}
 				existingAgent.setUser(existingUser);
 			}
 		}
