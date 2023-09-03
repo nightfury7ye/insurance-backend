@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +17,7 @@ import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.User_status;
+import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.AgentRepo;
 import com.techlabs.insurance.repo.CustomerRepo;
@@ -74,16 +76,16 @@ public class AgentServiceImpl implements AgentService{
 
 	@Override
 	public Agent updateAgentStatus(int agentId, int statusId) {
-		Optional<Agent> agent = agentRepo.findById(agentId);
+		Agent agent = agentRepo.findById(agentId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Agent Not Found!!!"));
 		
 		Optional<User_status> status = userStatusRepo.findById(statusId);
 		if(status.isPresent()) {
-			agent.get().setUser_status(status.get());
+			agent.setUser_status(status.get());
 		}else {
-			agent.get().setUser_status(userStatusRepo.findById(1).get());
+			agent.setUser_status(userStatusRepo.findById(1).get());
 		}
 		
-		return agentRepo.save(agent.get());
+		return agentRepo.save(agent);
 	}
 
 	@Override
@@ -115,7 +117,7 @@ public class AgentServiceImpl implements AgentService{
 			existingAgent.setLastname(updatedAgent.getLastname());
 			existingAgent.setQualification(updatedAgent.getQualification());
 			
-			User existingUser = userRepo.findById(existingAgent.getUser().getUserid()).orElse(null);
+			User existingUser = userRepo.findById(existingAgent.getUser().getUserid()).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"User Not Found!!!"));
 			if(existingUser != null) {
 				existingUser.setUsername(updatedAgent.getUser().getUsername());
 				if(updatedAgent.getUser().getPassword() != null) {

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -11,6 +12,9 @@ import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.IntArraySerial
 import com.techlabs.insurance.entities.InsurancePlan;
 import com.techlabs.insurance.entities.InsuranceScheme;
 import com.techlabs.insurance.entities.Status;
+import com.techlabs.insurance.exception.InsurancePlanNotFoundException;
+import com.techlabs.insurance.exception.InsuranceSchemeNotFoundException;
+import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.repo.InsurancePlanRepo;
 import com.techlabs.insurance.repo.StatusRepo;
 
@@ -53,27 +57,25 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 
 	@Override
 	public InsurancePlan updateInsurancePlan(InsurancePlan insurancePlanData, int planid, int statusid) {
-		Optional<InsurancePlan> insurancePlan = insurancePlanRepo.findById(planid);
+		InsurancePlan insurancePlan = insurancePlanRepo.findById(planid).orElseThrow(()-> new InsurancePlanNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Plan Not Found!!!"));
 		Optional<Status> status = statusRepo.findById(statusid);
-		if(insurancePlan.isPresent()) {
-			insurancePlan.get().setPlan_name(insurancePlanData.getPlan_name());
+		
+			insurancePlan.setPlan_name(insurancePlanData.getPlan_name());
 			if(status.isPresent()) {
-				insurancePlan.get().setStatus(status.get());
+				insurancePlan.setStatus(status.get());
 			}else {
-				insurancePlan.get().setStatus(statusRepo.findById(1).get());
+				insurancePlan.setStatus(statusRepo.findById(1).get());
 			}
-			return insurancePlanRepo.save(insurancePlan.get());
-		}
-		return null;
+			return insurancePlanRepo.save(insurancePlan);
+		
+		
 	}
 
 	@Override
 	public List<InsuranceScheme> getInsuranceSchemeById(int planid) {
-		Optional<InsurancePlan> insurancePlan = insurancePlanRepo.findById(planid);
-		if(insurancePlan.isPresent()) {
-			return insurancePlan.get().getSchemes();
-		}
-		return null;
+		InsurancePlan insurancePlan = insurancePlanRepo.findById(planid).orElseThrow(()-> new InsurancePlanNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Plan Not Found!!!"));
+		
+			return insurancePlan.getSchemes();
 	}
 
 }

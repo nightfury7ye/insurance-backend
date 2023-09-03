@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.techlabs.insurance.entities.Customer;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.User_status;
+import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.PolicyRepo;
@@ -49,14 +51,19 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Override
 	public Customer getCustomerById(int customerId) {
-		Optional<Customer> customerById=customerRepo.findById(customerId);
-		Customer customer = customerById.get();
+		Customer customerById=customerRepo.findById(customerId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Customer Not Found!!!"));
+		Customer customer = customerById;
 		return customer;
 	}
 
 	@Override
 	public void deleteCustomer(int customerId) {
-		customerRepo.deleteById(customerId);
+		try {
+			customerRepo.deleteById(customerId);
+		}catch (Exception e) {
+			throw new UserAPIException(HttpStatus.BAD_REQUEST, "Customer Not Found");
+		}
+		
 	}
 
 	@Override
@@ -70,7 +77,7 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Override
 	public Customer updateCustomerStatus(int customerId, int newStatusId) {
-		Customer customer = customerRepo.findById(customerId).orElse(null);
+		Customer customer = customerRepo.findById(customerId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Customer Not Found!!!"));
 		Optional<User_status> status = userStatusRepo.findById(newStatusId);
 		if(status.isPresent()){
 			customer.setUserstatus(status.get());
@@ -80,7 +87,7 @@ public class CustomerServiceImpl implements CustomerService{
 	
 	public void enableCustomerStatus(int customerId) {
 		int enabledStatus = 1;
-		Customer customer = customerRepo.findById(customerId).orElse(null);
+		Customer customer = customerRepo.findById(customerId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Customer Not Found!!!"));
 		User_status status = customer.getUserstatus();
         if (status.getStatusid()==2) {
         	status.setStatusid(enabledStatus);
@@ -91,7 +98,7 @@ public class CustomerServiceImpl implements CustomerService{
 
     public void disableCustomerStatus(int customerId) {
     	int disabledStatus = 2;
-		Customer customer = customerRepo.findById(customerId).orElse(null);
+		Customer customer = customerRepo.findById(customerId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Customer Not Found!!!"));
 		User_status status = customer.getUserstatus();
         if (status.getStatusid()==1) {
         	status.setStatusid(disabledStatus);
