@@ -41,7 +41,7 @@ public class Payment {
 	private double totalpayment;
 	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="statusid")
-	Payment_status status;
+	PaymentStatus status;
 	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="policyno")
 	@JsonIgnore

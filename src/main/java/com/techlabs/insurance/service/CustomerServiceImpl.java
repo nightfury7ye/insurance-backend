@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.techlabs.insurance.entities.Customer;
 import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.User;
-import com.techlabs.insurance.entities.User_status;
+import com.techlabs.insurance.entities.UserStatus;
 import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.payload.RegisterDto;
@@ -88,39 +88,43 @@ public class CustomerServiceImpl implements CustomerService{
 		int disabledStatusId = 2;
 		Pageable pageable = PageRequest.of(page, size);
 
-		return customerRepo.findByUserstatusStatusid(disabledStatusId, pageable);
+		return customerRepo.findByUserStatusStatusid(disabledStatusId, pageable);
 		//return customerRepo.findById(disabledStatusId);
 	}
 
 	@Override
 	public Customer updateCustomerStatus(int customerId, int newStatusId) {
 		Customer customer = customerRepo.findById(customerId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Customer Not Found!!!"));
-		Optional<User_status> status = userStatusRepo.findById(newStatusId);
+		Optional<UserStatus> status = userStatusRepo.findById(newStatusId);
 		if(status.isPresent()){
-			customer.setUserstatus(status.get());
+			customer.setUserStatus(status.get());
 		}
 		return customerRepo.save(customer);
 	}
 	
-	public void enableCustomerStatus(int customerId) {
-		int enabledStatus = 1;
+	public void activeCustomerStatus(int customerId) {
+		int newStatusId = 1;
 		Customer customer = customerRepo.findById(customerId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Customer Not Found!!!"));
-		User_status status = customer.getUserstatus();
-        if (status.getStatusid()==2) {
-        	status.setStatusid(enabledStatus);
-        	customer.setUserstatus(status);
-    		customerRepo.save(customer);
+		if(customer != null) {
+        	UserStatus newStatus = new UserStatus();
+        	newStatus.setStatusid(newStatusId);
+        	newStatus.setStatusname("ACTIVE");
+        	customer.setUserStatus(newStatus);
+        	customerRepo.save(customer);
+        	
         }
     }
 
-    public void disableCustomerStatus(int customerId) {
-    	int disabledStatus = 2;
+    public void inactiveCustomerStatus(int customerId) {
+    	int newStatusId = 2;
 		Customer customer = customerRepo.findById(customerId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Customer Not Found!!!"));
-		User_status status = customer.getUserstatus();
-        if (status.getStatusid()==1) {
-        	status.setStatusid(disabledStatus);
-        	customer.setUserstatus(status);
-    		customerRepo.save(customer);
+		if(customer != null) {
+        	UserStatus newStatus = new UserStatus();
+        	newStatus.setStatusid(newStatusId);
+        	newStatus.setStatusname("INACTIVE");
+        	customer.setUserStatus(newStatus);
+        	customerRepo.save(customer);
+        	
         }
     }
 	

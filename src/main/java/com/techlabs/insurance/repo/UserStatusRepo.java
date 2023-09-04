@@ -2,8 +2,8 @@ package com.techlabs.insurance.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.techlabs.insurance.entities.User_status;
+import com.techlabs.insurance.entities.UserStatus;
 
-public interface UserStatusRepo extends JpaRepository<User_status, Integer>{
+public interface UserStatusRepo extends JpaRepository<UserStatus, Integer>{
 
 }

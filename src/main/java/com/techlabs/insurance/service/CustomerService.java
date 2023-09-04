@@ -14,8 +14,8 @@ public interface CustomerService {
 	public void deleteCustomer(int customerId);
 	public Page<Customer> getAllDisabledCustomers(int page, int size);
 	public Customer updateCustomerStatus(int customerId, int newStatusId);
-	public void enableCustomerStatus(int customerId);
-	public void disableCustomerStatus(int customerId);
+	public void activeCustomerStatus(int customerId);
+	public void inactiveCustomerStatus(int customerId);
 
 	public Customer getCustomerByUsername(String username);
 }

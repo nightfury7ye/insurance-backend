@@ -70,18 +70,18 @@ public class CustomerController {
 		return customerService.updateCustomerStatus(customerId, statusId);
 	}
 	
-//	@PreAuthorize("hasRole('ADMIN')")
-//	@PostMapping("/enablecustomer/{customerId}")
-//    public ResponseEntity<String> enableCustomer(@PathVariable(name="customerId") int customerId) {
-//        customerService.enableCustomerStatus(customerId);
-//        return ResponseEntity.ok("Customer status enabled");
-//    }
-//
-//	@PreAuthorize("hasRole('ADMIN')")
-//    @PostMapping("/disablecustomer/{customerId}")
-//    public ResponseEntity<String> disableCustomer(@PathVariable(name="customerId") int customerId) {
-//        customerService.disableCustomerStatus(customerId);
-//        return ResponseEntity.ok("Customer status disabled");
-//    }
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/activecustomer/{customerId}")
+    public ResponseEntity<String> activeCustomer(@PathVariable(name="customerId") int customerId) {
+        customerService.activeCustomerStatus(customerId);
+        return ResponseEntity.ok("Customer status enabled");
+    }
+
+	@PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/inactivecustomer/{customerId}")
+    public ResponseEntity<String> inactiveCustomer(@PathVariable(name="customerId") int customerId) {
+        customerService.inactiveCustomerStatus(customerId);
+        return ResponseEntity.ok("Customer status disabled");
+    }
 	
 }

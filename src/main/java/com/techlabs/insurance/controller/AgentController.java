@@ -58,4 +58,17 @@ public class AgentController {
 		return agentService.getAllAgents(page, size); 
 	}
 	
+	@PreAuthorize("hasRole('EMPLOYEE')")
+	@PostMapping("/activeagent/{agentid}")
+    public ResponseEntity<String> activeCustomer(@PathVariable(name="agentid") int agentId) {
+        agentService.activeAgentStatus(agentId);
+        return ResponseEntity.ok("Agent status active");
+    }
+
+	@PreAuthorize("hasRole('EMPLOYEE')")
+    @PostMapping("/inactiveagent/{agentid}")
+    public ResponseEntity<String> inactiveCustomer(@PathVariable(name="agentid") int agentId) {
+        agentService.inactiveAgentStatus(agentId);
+        return ResponseEntity.ok("Agent status inactive");
+    }
 }

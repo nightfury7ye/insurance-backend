@@ -54,6 +54,6 @@ public class Agent {
 	
 	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="statusid")
-	User_status user_status;
+	UserStatus userStatus;
 	
 }
