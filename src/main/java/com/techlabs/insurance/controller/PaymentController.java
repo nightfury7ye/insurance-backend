@@ -24,7 +24,6 @@ public class PaymentController {
 	@Autowired
 	private PaymentService paymentService;
 	
-	@PreAuthorize("hasRole('CUSTOMER')")
 	@PostMapping("/policy/{policyid}/payments")
 	public List<Payment> payFirstinstallment(@PathVariable(name="policyid") int policyid,@RequestBody Payment payment){
 		return policyService.payFirstinstallment(policyid, payment);

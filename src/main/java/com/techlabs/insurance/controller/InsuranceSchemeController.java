@@ -45,7 +45,6 @@ public class InsuranceSchemeController {
 		return insuranceSchemeService.saveInsuranceScheme(insuranceScheme, planid, statusid);
 	}
 	
-	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/insurance-plan/{planid}/insurance-schemes")
 	List<InsuranceScheme> getInsuranceSchemeById(@PathVariable(name="planid") int planid){
 		return insurancePlanService.getInsuranceSchemeById(planid);

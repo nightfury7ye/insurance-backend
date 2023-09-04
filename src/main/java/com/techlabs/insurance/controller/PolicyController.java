@@ -37,9 +37,15 @@ public class PolicyController {
 		return null; 
 	}
 	
-	@PreAuthorize("hasRole('CUSTOMER')")
 	@PostMapping("customer/{customerid}/policy")
-	Policy purchasePolicy(@RequestBody Policy policy,@PathVariable(name="customerid") int customerid ,@RequestParam(name="schemeid") int schemeid,@RequestParam(name="investtime") int investtime,@RequestParam(name="typeid") int typeid,@RequestParam(name="statusid") int statusid) {
+	Policy purchasePolicy(@RequestBody Policy policy,@PathVariable(name="customerid") int customerid ,@RequestParam(name="schemeid") int schemeid,
+			@RequestParam(name="investtime") int investtime,@RequestParam(name="typeid") int typeid,@RequestParam(name="statusid") int statusid) {
 		return policyService.purchasePolicy(policy, customerid, schemeid, investtime, typeid,statusid);
+	}
+	
+	@PostMapping("agent/customer/{customerid}/policy")
+	Policy purchasePolicyViaAgent(@RequestBody Policy policy,@PathVariable(name="customerid") int customerid, @PathVariable(name="agentid") int agentid ,@RequestParam(name="schemeid") int schemeid,
+			@RequestParam(name="investtime") int investtime,@RequestParam(name="typeid") int typeid,@RequestParam(name="statusid") int statusid) {
+		return policyService.purchasePolicyViaAgent(policy, customerid,agentid, schemeid, investtime, typeid,statusid);
 	}
 }

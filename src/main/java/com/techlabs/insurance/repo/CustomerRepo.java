@@ -11,4 +11,6 @@ public interface CustomerRepo extends JpaRepository<Customer, Integer>{
   Page<Customer> findByUserstatusStatusid(int statusid, Pageable pageable);
 
   Customer findByUserUsername(String username);
+  
+  Page<Customer> findByAgentAgentid(int agent_agentid, Pageable pageable);
 }

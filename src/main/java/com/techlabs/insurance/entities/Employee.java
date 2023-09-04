@@ -35,7 +35,7 @@ public class Employee {
 	@Column
 	private double salary;
 	
-	@OneToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+	@OneToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="userid")
 	User user;
 }
