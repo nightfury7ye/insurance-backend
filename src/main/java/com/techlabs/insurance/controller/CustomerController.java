@@ -36,13 +36,20 @@ public class CustomerController {
 	
 	//@PreAuthorize("hasRole('EMPLOYEE')")
 	@GetMapping("/users/customer/{customerid}")
-	public void getCustomerById(@PathVariable(name="customerid")int customerId) {
-		customerService.getCustomerById(customerId);
+	public Customer getCustomerById(@PathVariable(name="customerid")int customerId) {
+		return customerService.getCustomerById(customerId);
 	}
 	
-	@GetMapping("users/customers")
+	@GetMapping("/users/customers")
 	public ResponseEntity<Page<Customer>> getAllCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		return customerService.getAllCustomers(page, size);
+	}
+	
+	@PreAuthorize("hasRole('AGENT')")
+	@GetMapping("/users/customers/{agentid}")
+	public ResponseEntity<Page<Customer>> getCustomersByAgentid(@PathVariable(name="agentid") int agentid,@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
+		System.out.println("Inside getCustomersByAgentid");
+		return customerService.getCustomersByAgentid(agentid, page, size);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")

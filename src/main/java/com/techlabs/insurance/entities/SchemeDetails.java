@@ -40,8 +40,6 @@ public class SchemeDetails {
 	private int profit_ratio;
 	@Column
 	private int registrationcommratio;
-	@Column
-	private int installmentcommratio;
 	
 	
 }

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Customer;
 import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.InstallmentType;
@@ -28,6 +29,7 @@ import com.techlabs.insurance.exception.InsuranceSchemeNotFoundException;
 import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.PolicyNotFoundException;
 import com.techlabs.insurance.exception.UserAPIException;
+import com.techlabs.insurance.repo.AgentRepo;
 import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.InstallmentTypeRepo;
 import com.techlabs.insurance.repo.InsuranceSchemeRepo;
@@ -56,6 +58,10 @@ public class PolicyServiceImpl implements PolicyService{
 	private PaymentStatusRepo paymentStatusRepo;
 	@Autowired
 	private PaymentRepo paymentRepo;
+	@Autowired
+	private AgentRepo agentRepo;
+	@Autowired
+	private CommisionService commisionService;
 	
 	@Override
 	public Policy purchasePolicy(Policy policy, int customerid ,int schemeid,int investtime, int typeid, int statusid) {
@@ -75,6 +81,35 @@ public class PolicyServiceImpl implements PolicyService{
 		policy.setIssuedate(Date.valueOf(currentDate));
 		policy.setMaturitydate(Date.valueOf(incrementedDate));
 		policy.setInstallmentType(installmentType.get());
+		return policyRepo.save(policy);
+	}
+	
+	@Override
+	public Policy purchasePolicyViaAgent(Policy policy, int customerid, int agentid, int schemeid, int investtime,
+			int typeid, int statusid) {
+		LocalDate currentDate = LocalDate.now();
+		LocalDate incrementedDate = currentDate.plusYears(investtime);
+		InsuranceScheme insuranceScheme = schemeRepo.findById(schemeid).orElseThrow(()-> new InsuranceSchemeNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Scheme Not Found!!!"));
+		Customer customer = customerRepo.findById(customerid).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Customer Not Found!!!"));;
+		Optional<InstallmentType> installmentType = typeRepo.findById(typeid);
+		Optional<Status> status = statusRepo.findById(statusid);
+		if(status.isPresent()) {
+			policy.setStatus(status.get());
+		}else {
+			policy.setStatus(statusRepo.findById(1).get());
+		}
+		Optional<Agent> agent = agentRepo.findById(agentid);
+		if(agent.isPresent()) {
+			policy.setAgent(agent.get());
+		}
+		policy.setCustomer(customer);
+		policy.setInsuranceScheme(insuranceScheme);
+		policy.setIssuedate(Date.valueOf(currentDate));
+		policy.setMaturitydate(Date.valueOf(incrementedDate));
+		policy.setInstallmentType(installmentType.get());
+		int commratio = insuranceScheme.getSchemeDetails().getRegistrationcommratio();
+		double commisionAmount = (commratio/ 100.0) * policy.getSumassured();
+		commisionService.saveCommision(commisionAmount, agent.get(), customer, policy);
 		return policyRepo.save(policy);
 	}
 

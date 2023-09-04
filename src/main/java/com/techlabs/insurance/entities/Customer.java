@@ -63,6 +63,11 @@ public class Customer {
 	@JsonIgnore
 	private List<Policy> policy;
 	
+	@OneToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name="agentid")
+	@JsonIgnore
+	private Agent agent;
+	
 	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="statusid")
 	User_status userstatus;

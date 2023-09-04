@@ -9,6 +9,7 @@ import com.techlabs.insurance.entities.Policy;
 public interface CustomerService {
 	public Customer registerCustomer(Customer customer);
 	public ResponseEntity<Page<Customer>> getAllCustomers(int page, int size);
+	public ResponseEntity<Page<Customer>> getCustomersByAgentid(int agentid, int page, int size);
 	public Customer getCustomerById(int customerId);
 	public void deleteCustomer(int customerId);
 	public Page<Customer> getAllDisabledCustomers(int page, int size);

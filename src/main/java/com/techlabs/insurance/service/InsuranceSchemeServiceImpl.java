@@ -77,7 +77,6 @@ public class InsuranceSchemeServiceImpl implements InsuranceSchemeService{
 	        existingSchemeDetails.setMax_age(schemeDetailsData.getMax_age());
 	        existingSchemeDetails.setProfit_ratio(schemeDetailsData.getProfit_ratio());
 	        existingSchemeDetails.setRegistrationcommratio(schemeDetailsData.getRegistrationcommratio());
-	        existingSchemeDetails.setInstallmentcommratio(schemeDetailsData.getInstallmentcommratio());
 	        
 	        existingInsuranceScheme.setStatus(insuranceSchemeData.getStatus());
 	        if (status.isPresent()) {

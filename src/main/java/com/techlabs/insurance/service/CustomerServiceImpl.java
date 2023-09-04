@@ -55,6 +55,16 @@ public class CustomerServiceImpl implements CustomerService{
 		}
 		return new ResponseEntity<>(customers,HttpStatus.OK) ;
 	}
+	
+	@Override
+	public ResponseEntity<Page<Customer>> getCustomersByAgentid(int agentid, int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Customer> customers =customerRepo.findByAgentAgentid(agentid,pageable);
+		if(customers.isEmpty()) {
+			throw new ListIsEmptyException(HttpStatus.BAD_REQUEST, "Employee List Is Empty!!!");
+		}
+		return new ResponseEntity<>(customers,HttpStatus.OK) ;
+	}
 
 	@Override
 	public Customer getCustomerById(int customerId) {

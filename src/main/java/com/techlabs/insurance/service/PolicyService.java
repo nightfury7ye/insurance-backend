@@ -10,7 +10,7 @@ import com.techlabs.insurance.entities.Policy;
 
 public interface PolicyService {
 	Policy purchasePolicy(Policy policy,int customerid ,int schemeid,int investtime, int typeid, int statusid);
-	
+	Policy purchasePolicyViaAgent(Policy policy,int customerid, int agentid ,int schemeid,int investtime, int typeid, int statusid);
 	List<Payment> payFirstinstallment(int policyid, Payment payment);
 	
 	Payment payInstallment(Payment payment ,int paymentid);
