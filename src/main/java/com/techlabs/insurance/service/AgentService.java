@@ -14,4 +14,7 @@ public interface AgentService {
 	public Agent registerAgent(Agent agent);
 	public Agent getAgentByUsername(String username);
 	public Agent updateAgentProfile(String username, Agent updatedAgent);
+	
+	public void activeAgentStatus(int agentId);
+	public void inactiveAgentStatus(int agentId);
 }

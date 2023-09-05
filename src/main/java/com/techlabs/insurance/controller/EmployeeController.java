@@ -30,8 +30,8 @@ public class EmployeeController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/users/employee")
-	Employee saveEmployee(@RequestBody Employee employee) {
-		return employeeService.saveEmployee(employee);
+	Employee saveEmployee(@RequestBody Employee employee, @RequestParam(name="statusid")int statusId) {
+		return employeeService.saveEmployee(employee, statusId);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
@@ -47,9 +47,14 @@ public class EmployeeController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/users/employee/{employeeid}")
-	public void deleteEmployee(@PathVariable(name="employeeid")int employeeId) {
-		employeeService.deleteEmployee(employeeId);
+	@PostMapping("/users/inactiveemployee/{employeeid}")
+	public void inactiveEmployee(@PathVariable(name="employeeid")int employeeId) {
+		employeeService.inactiveEmployee(employeeId);
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/users/activeemployee/{employeeid}")
+	public void activeEmployee(@PathVariable(name="employeeid")int employeeId) {
+		employeeService.inactiveEmployee(employeeId);
+	}
 }

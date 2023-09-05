@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Payment_status {
+public class UserStatus {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column
