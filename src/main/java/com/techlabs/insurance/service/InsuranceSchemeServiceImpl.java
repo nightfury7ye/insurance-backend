@@ -13,6 +13,7 @@ import com.techlabs.insurance.entities.SchemeDetails;
 import com.techlabs.insurance.entities.Status;
 import com.techlabs.insurance.exception.InsurancePlanNotFoundException;
 import com.techlabs.insurance.exception.InsuranceSchemeNotFoundException;
+import com.techlabs.insurance.exception.StatusNotFoundException;
 import com.techlabs.insurance.repo.InsurancePlanRepo;
 import com.techlabs.insurance.repo.InsuranceSchemeRepo;
 import com.techlabs.insurance.repo.StatusRepo;
@@ -86,5 +87,21 @@ public class InsuranceSchemeServiceImpl implements InsuranceSchemeService{
 	        }
 	        
 	        return insuranceSchemeRepo.save(existingInsuranceScheme);
+	}
+
+	@Override
+	public void toggleSchemeStatus(int schemeId, int newStatusId) {
+		InsuranceScheme scheme = insuranceSchemeRepo.findById(schemeId)
+                .orElseThrow(() -> new InsuranceSchemeNotFoundException(HttpStatus.BAD_REQUEST, "Scheme not found with id: " + schemeId));
+
+        if(scheme != null) {
+        	Status newStatus = statusRepo.findById(newStatusId).orElseThrow(() -> new StatusNotFoundException(HttpStatus.BAD_REQUEST, "Scheme status not found with id: " + newStatusId));
+        	
+        	if(newStatus != null) {
+            	scheme.setStatus(newStatus);
+        	}
+        	insuranceSchemeRepo.save(scheme);
+        }		
+		
 	}
 }

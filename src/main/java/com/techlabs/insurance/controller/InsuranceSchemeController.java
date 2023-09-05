@@ -49,4 +49,9 @@ public class InsuranceSchemeController {
 	List<InsuranceScheme> getInsuranceSchemeById(@PathVariable(name="planid") int planid){
 		return insurancePlanService.getInsuranceSchemeById(planid);
 	}
+	
+	@PostMapping("/insurance-scheme/{schemeid}/{statusid}")
+	public void toggleSchemeStatus(@PathVariable(name="schemeid")int schemeId,@PathVariable(name="statusid") int newStatusId) {
+		insuranceSchemeService.toggleSchemeStatus(schemeId, newStatusId);
+	}
 }
