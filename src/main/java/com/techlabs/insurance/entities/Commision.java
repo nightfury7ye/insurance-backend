@@ -33,7 +33,7 @@ public class Commision {
 	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="customerid")
 	private Customer customer;
-	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="policyno")
 	private Policy policy;
 }
