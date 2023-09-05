@@ -8,5 +8,6 @@ import com.techlabs.insurance.entities.Policy;
 
 public interface PolicyRepo extends JpaRepository<Policy, Integer>{   
 	Page<Policy> findByCustomerCustomerid(int customerid, Pageable pageable);
+	
 }
   
