@@ -65,7 +65,7 @@ public class Policy {
 	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name="policyno")
-	private List<Claims> claims;
+	private List<Claim> claims;
 	
 	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="statusid")

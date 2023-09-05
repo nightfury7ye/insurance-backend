@@ -70,6 +70,6 @@ public class Customer {
 	
 	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="statusid")
-	User_status userstatus;
+	UserStatus userStatus;
 	
 }

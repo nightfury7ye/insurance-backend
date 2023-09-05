@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Claims {
+public class Claim {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column

@@ -21,7 +21,7 @@ import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.InstallmentType;
 import com.techlabs.insurance.entities.InsuranceScheme;
 import com.techlabs.insurance.entities.Payment;
-import com.techlabs.insurance.entities.Payment_status;
+import com.techlabs.insurance.entities.PaymentStatus;
 import com.techlabs.insurance.entities.Policy;
 import com.techlabs.insurance.entities.Status;
 import com.techlabs.insurance.exception.InsurancePlanNotFoundException;
@@ -129,7 +129,7 @@ public class PolicyServiceImpl implements PolicyService{
 				if(i == 0) {
 					System.out.println("inside 0");
 					payment.setDate(Date.valueOf(date1));
-					Optional<Payment_status> status= paymentStatusRepo.findById(1);
+					Optional<PaymentStatus> status= paymentStatusRepo.findById(1);
 					payment.setStatus(status.get());
 					payments.add(payment);
 				}
@@ -140,7 +140,7 @@ public class PolicyServiceImpl implements PolicyService{
 					emptyPayment.setTax(payment.getTax());
 					date1 = Date.valueOf(date1.plusYears(1)).toLocalDate();
 					emptyPayment.setDate(Date.valueOf(date1));
-					Optional<Payment_status> status = paymentStatusRepo.findById(2);
+					Optional<PaymentStatus> status = paymentStatusRepo.findById(2);
 					emptyPayment.setStatus(status.get());
 					payments.add(emptyPayment);
 				}
@@ -151,7 +151,7 @@ public class PolicyServiceImpl implements PolicyService{
 			for(int i = 0; i < count; i++) {
 				if(i == 0) {
 					payment.setDate(Date.valueOf(date1));
-					Optional<Payment_status> status= paymentStatusRepo.findById(1);
+					Optional<PaymentStatus> status= paymentStatusRepo.findById(1);
 					payment.setStatus(status.get());
 					payment.setAmount(policy.getPremiumamount());
 				}
@@ -162,7 +162,7 @@ public class PolicyServiceImpl implements PolicyService{
 					emptyPayment.setTax(payment.getTax());
 					date1 = Date.valueOf(date1.plusMonths(6)).toLocalDate();
 					emptyPayment.setDate(Date.valueOf(date1));
-					Optional<Payment_status> status = paymentStatusRepo.findById(2);
+					Optional<PaymentStatus> status = paymentStatusRepo.findById(2);
 					emptyPayment.setStatus(status.get());
 					payments.add(emptyPayment);
 				}
@@ -174,7 +174,7 @@ public class PolicyServiceImpl implements PolicyService{
 			for(int i = 0; i < count; i++) {
 				if(i == 0) {
 					payment.setDate(Date.valueOf(date1));
-					Optional<Payment_status> status= paymentStatusRepo.findById(1);
+					Optional<PaymentStatus> status= paymentStatusRepo.findById(1);
 					payment.setStatus(status.get());
 				}
 				else {
@@ -184,7 +184,7 @@ public class PolicyServiceImpl implements PolicyService{
 					emptyPayment.setTax(payment.getTax());
 					date1 = Date.valueOf(date1.plusMonths(3)).toLocalDate();
 					emptyPayment.setDate(Date.valueOf(date1));
-					Optional<Payment_status> status = paymentStatusRepo.findById(2);
+					Optional<PaymentStatus> status = paymentStatusRepo.findById(2);
 					emptyPayment.setStatus(status.get());
 					payments.add(emptyPayment);
 				}
@@ -201,7 +201,7 @@ public class PolicyServiceImpl implements PolicyService{
 		System.out.println("pay");
 		Payment dbpayment = paymentRepo.findById(paymentid).get();
 		dbpayment.setPaymenttype(payment.getPaymenttype());
-		Optional<Payment_status> status= paymentStatusRepo.findById(1);
+		Optional<PaymentStatus> status= paymentStatusRepo.findById(1);
 		dbpayment.setStatus(status.get());
 		return paymentRepo.save(dbpayment);
 	}

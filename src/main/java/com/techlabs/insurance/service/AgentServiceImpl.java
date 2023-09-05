@@ -15,10 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.techlabs.insurance.entities.Agent;
+import com.techlabs.insurance.entities.Customer;
 import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
-import com.techlabs.insurance.entities.User_status;
+import com.techlabs.insurance.entities.UserStatus;
 import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.payload.RegisterDto;
@@ -63,11 +64,11 @@ public class AgentServiceImpl implements AgentService{
 		user.setRoles(roles);
 		agent.setUser(user);
 		
-		Optional<User_status> status = userStatusRepo.findById(statusId);
+		Optional<UserStatus> status = userStatusRepo.findById(statusId);
 		if(status.isPresent()) {
-			agent.setUser_status(status.get());
+			agent.setUserStatus(status.get());
 		}else {
-			agent.setUser_status(userStatusRepo.findById(1).get());
+			agent.setUserStatus(userStatusRepo.findById(1).get());
 		}
 		return agentRepo.save(agent);
 	}
@@ -81,11 +82,11 @@ public class AgentServiceImpl implements AgentService{
 	public Agent updateAgentStatus(int agentId, int statusId) {
 		Agent agent = agentRepo.findById(agentId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Agent Not Found!!!"));
 		
-		Optional<User_status> status = userStatusRepo.findById(statusId);
+		Optional<UserStatus> status = userStatusRepo.findById(statusId);
 		if(status.isPresent()) {
-			agent.setUser_status(status.get());
+			agent.setUserStatus(status.get());
 		}else {
-			agent.setUser_status(userStatusRepo.findById(1).get());
+			agent.setUserStatus(userStatusRepo.findById(1).get());
 		}
 		
 		return agentRepo.save(agent);
@@ -137,5 +138,31 @@ public class AgentServiceImpl implements AgentService{
 		}
 		return agentRepo.save(existingAgent);
 	}
+	
+	public void activeAgentStatus(int agentId) {
+		int newStatusId = 1;
+		Agent agent = agentRepo.findById(agentId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Agent Not Found!!!"));
+		if(agent != null) {
+        	UserStatus newStatus = new UserStatus();
+        	newStatus.setStatusid(newStatusId);
+        	newStatus.setStatusname("ACTIVE");
+        	agent.setUserStatus(newStatus);
+        	agentRepo.save(agent);
+        	
+        }
+    }
+
+    public void inactiveAgentStatus(int agentId) {
+    	int newStatusId = 2;
+    	Agent agent = agentRepo.findById(agentId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Agent Not Found!!!"));
+		if(agent != null) {
+        	UserStatus newStatus = new UserStatus();
+        	newStatus.setStatusid(newStatusId);
+        	newStatus.setStatusname("INACTIVE");
+        	agent.setUserStatus(newStatus);
+        	agentRepo.save(agent);
+        	
+        }
+    }
 
 }
