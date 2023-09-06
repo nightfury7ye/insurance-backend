@@ -63,7 +63,7 @@ public class Customer {
 	@JsonIgnore
 	private List<Policy> policy;
 	
-	@OneToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="agentid")
 	@JsonIgnore
 	private Agent agent;
@@ -71,5 +71,4 @@ public class Customer {
 	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="statusid")
 	UserStatus userStatus;
-	
 }

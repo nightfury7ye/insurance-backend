@@ -1,5 +1,7 @@
 package com.techlabs.insurance.entities;
 
+import java.sql.Date;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,7 +35,13 @@ public class Commision {
 	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="customerid")
 	private Customer customer;
-	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="policyno")
 	private Policy policy;
+	@Column
+	private Date date;
+	@Column
+	private String RequestStatus;
+	@Column
+	private String WithdrawStatus;
 }

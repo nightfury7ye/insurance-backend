@@ -40,7 +40,7 @@ public class InsuranceSchemeController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/insurance-plan/{planid}/insurance-scheme/{statusid}")
+	@PostMapping("/insurance-plan/{planid}/insurance-scheme")
 	public InsuranceScheme saveInsuranceScheme(@RequestBody InsuranceScheme insuranceScheme,@PathVariable(name="planid") int planid,@RequestParam(name="statusid") int statusid) {
 		return insuranceSchemeService.saveInsuranceScheme(insuranceScheme, planid, statusid);
 	}

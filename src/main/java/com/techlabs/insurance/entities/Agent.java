@@ -2,6 +2,8 @@ package com.techlabs.insurance.entities;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,6 +52,7 @@ public class Agent {
 	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name="agentid") 
+	@JsonIgnore
 	private List<Commision> commision;
 	
 	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})

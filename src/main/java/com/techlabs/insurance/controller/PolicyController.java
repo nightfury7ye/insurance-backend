@@ -44,8 +44,9 @@ public class PolicyController {
 	}
 	
 	@PostMapping("agent/customer/{customerid}/policy")
-	Policy purchasePolicyViaAgent(@RequestBody Policy policy,@PathVariable(name="customerid") int customerid, @PathVariable(name="agentid") int agentid ,@RequestParam(name="schemeid") int schemeid,
+	Policy purchasePolicyViaAgent(@RequestBody Policy policy,@PathVariable(name="customerid") int customerid, @RequestParam(name="agentid") int agentid ,@RequestParam(name="schemeid") int schemeid,
 			@RequestParam(name="investtime") int investtime,@RequestParam(name="typeid") int typeid,@RequestParam(name="statusid") int statusid) {
+		System.out.println("PolicyViaAgent");
 		return policyService.purchasePolicyViaAgent(policy, customerid,agentid, schemeid, investtime, typeid,statusid);
 	}
 }
