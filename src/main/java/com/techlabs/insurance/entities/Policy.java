@@ -61,6 +61,7 @@ public class Policy {
 	
 	@ManyToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="agentid")
+	@JsonIgnore
 	private Agent agent;
 	
 	@OneToMany(cascade= CascadeType.ALL)
