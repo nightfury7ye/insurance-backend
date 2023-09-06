@@ -1,5 +1,6 @@
 package com.techlabs.insurance.service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.techlabs.insurance.entities.Customer;
-import com.techlabs.insurance.entities.Employee;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.UserStatus;
 import com.techlabs.insurance.exception.ListIsEmptyException;
@@ -19,6 +20,7 @@ import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.PolicyRepo;
+import com.techlabs.insurance.repo.UserRepo;
 import com.techlabs.insurance.repo.UserStatusRepo;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,10 @@ public class CustomerServiceImpl implements CustomerService{
 	private CustomerRepo customerRepo;
 	@Autowired
 	private PolicyRepo policyRepo;
+	@Autowired
+	private UserRepo userRepo;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private UserStatusRepo userStatusRepo;
 	
@@ -131,6 +137,39 @@ public class CustomerServiceImpl implements CustomerService{
 	@Override
 	public Customer getCustomerByUsername(String username) {
 		return customerRepo.findByUserUsername(username);
+	}
+
+	@Override
+	public Customer updateCustomer(int customerId, Customer customer) {
+		Customer existingCustomer = customerRepo.findById(customerId)
+	            .orElseThrow(() -> new NoSuchElementException("Customer not found"));
+
+	    // Update the existing customer's properties with the values from the new customer
+	    existingCustomer.setFirstname(customer.getFirstname());
+	    existingCustomer.setLastname(customer.getLastname());
+	    existingCustomer.setEmail(customer.getEmail());
+	    existingCustomer.setPhoneno(customer.getPhoneno());
+
+	    // Update the address details
+	    existingCustomer.getAddress().setAddress(customer.getAddress().getAddress());
+	    existingCustomer.getAddress().setCity(customer.getAddress().getCity());
+	    existingCustomer.getAddress().setState(customer.getAddress().getState());
+	    existingCustomer.getAddress().setPincode(customer.getAddress().getPincode());
+
+	    // Update the nominee details
+	    existingCustomer.getNominee().setNomineename(customer.getNominee().getNomineename());
+	    existingCustomer.getNominee().setNomineeRelation(customer.getNominee().getNomineeRelation());
+
+	    User existingUser = userRepo.findById(existingCustomer.getUser().getUserid()).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"User Not Found!!!"));
+		if(existingUser != null) {
+			existingUser.setUsername(customer.getUser().getUsername());
+			if(customer.getUser().getPassword() != null) {
+				existingUser.setPassword(passwordEncoder.encode(customer.getUser().getPassword()));
+			}
+			existingCustomer.setUser(existingUser);
+		}
+
+	    return customerRepo.save(existingCustomer);
 	}
 	
 }

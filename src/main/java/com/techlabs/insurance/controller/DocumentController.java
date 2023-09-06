@@ -34,8 +34,8 @@ public class DocumentController {
 	private CustomerRepo customerRepo;
 	
 	@ResponseStatus(value = HttpStatus.OK)
-	@PostMapping("/customer/document/upload")
-	public String uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("custid") int customerid) throws IllegalStateException,IOException{
+	@PostMapping("/customer/document/upload/{custid}")
+	public String uploadFile(@RequestParam("file") MultipartFile file,@PathVariable("custid") int customerid) throws IllegalStateException,IOException{
 		try {
 			Optional<Customer> customer = customerRepo.findById(customerid);
 			documentsService.uploadFile(file, customer.get());

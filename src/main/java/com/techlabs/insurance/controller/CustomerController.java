@@ -70,6 +70,11 @@ public class CustomerController {
 		return customerService.updateCustomerStatus(customerId, statusId);
 	}
 	
+	@PutMapping("/users/customer/{customerid}")
+	public Customer updateCustomer(@PathVariable(name="customerid")int customerId, @RequestBody Customer customer) {
+		return customerService.updateCustomer(customerId, customer);
+	}
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/activecustomer/{customerId}")
     public ResponseEntity<String> activeCustomer(@PathVariable(name="customerId") int customerId) {
