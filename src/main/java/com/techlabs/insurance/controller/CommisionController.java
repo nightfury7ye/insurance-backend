@@ -36,9 +36,10 @@ public class CommisionController {
 		commisionService.withdrawCommission(commissionid);
 	}
 	
-	@PreAuthorize("hasRole('EMPLOYEE')")
+//	@PreAuthorize("hasRole('EMPLOYEE')")
 	@PutMapping("/commission/{commissionid}/approve")
-	public void approveCommission(int commissionid) {
+	public void approveCommission(@PathVariable(name="commissionid") int commissionid) {
+		System.out.println(commissionid);
 		commisionService.approveCommission(commissionid);
 	}
 }

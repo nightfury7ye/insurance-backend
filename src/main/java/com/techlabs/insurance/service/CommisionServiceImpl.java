@@ -95,6 +95,7 @@ public class CommisionServiceImpl implements CommisionService{
 
 	@Override
 	public void approveCommission(int commissionid) {
+		System.out.print(commissionid);
 		Commision commision = commisionRepo.findById(commissionid).orElseThrow();
 		commision.setWithdrawStatus("approved");
 		commisionRepo.save(commision);
