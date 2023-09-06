@@ -46,6 +46,11 @@ public class EmployeeController {
 		employeeService.updateEmployee(employeeId, updatedEmployee);
 	}
 	
+	@GetMapping("/users/employee/{employeeid}")
+	public Employee getEmployeeById(@PathVariable(name="employeeid")int employeeId) {
+		return employeeService.getEmployeeById(employeeId);
+	}
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/users/inactiveemployee/{employeeid}")
 	public void inactiveEmployee(@PathVariable(name="employeeid")int employeeId) {
