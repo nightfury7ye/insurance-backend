@@ -9,6 +9,7 @@ public interface EmployeeService {
 	public Employee saveEmployee(Employee employee,int statusId);
 	public ResponseEntity<Page<Employee>> getAllEmployees(int page, int size);
 	public Employee updateEmployee(int employeeId, Employee updatedEmployee);
+	public Employee getEmployeeById(int employeeId);
 	public void inactiveEmployee(int employeeId);
 	public void activeEmployee(int employeeId);
 }

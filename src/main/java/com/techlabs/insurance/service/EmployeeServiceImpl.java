@@ -93,6 +93,14 @@ public class EmployeeServiceImpl implements EmployeeService{
 		}
 		return employeeRepo.save(existingEmployee);
 	}
+	
+
+	@Override
+	public Employee getEmployeeById(int employeeId) {
+		return employeeRepo.findById(employeeId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Employee Not Found!!!"));
+	}	
+	
+	
 
 	@Override
 	public void inactiveEmployee(int employeeId) {
@@ -122,6 +130,5 @@ public class EmployeeServiceImpl implements EmployeeService{
         	employeeRepo.save(employee);
         	
         }
-	}	
-	
+	}
 }

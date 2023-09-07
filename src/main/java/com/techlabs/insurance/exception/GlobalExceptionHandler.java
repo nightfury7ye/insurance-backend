@@ -35,11 +35,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 	
-//	@ExceptionHandler(AccountNotFoundException.class)
-//	public ResponseEntity<?> handleAccountNotFound(AccountNotFoundException e){
-//		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//	}
-//	
+	@ExceptionHandler(StatusNotFoundException.class)
+	public ResponseEntity<?> handleStatusNotFoundException(StatusNotFoundException e){
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
 //	@ExceptionHandler(AccountStatusException.class)
 //	public ResponseEntity<?> handleAccountStatusException(AccountStatusException e){
 //		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

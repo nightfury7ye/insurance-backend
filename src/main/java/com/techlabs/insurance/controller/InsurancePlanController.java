@@ -47,4 +47,9 @@ public class InsurancePlanController {
 	public List<InsurancePlan> getInsurancePlans() {
 		return insurancePlanService.getInsurancePlans();
 	}
+	
+	@PostMapping("/insurance-plans/{planid}/{statusid}")
+	public void togglePlanStatus(@PathVariable(name="planid")int planId, @PathVariable(name="statusid")int newStatusId) {
+		insurancePlanService.togglePlanStatus(planId, newStatusId);
+	}
 }

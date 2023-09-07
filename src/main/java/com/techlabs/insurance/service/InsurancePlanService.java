@@ -15,4 +15,6 @@ public interface InsurancePlanService {
 	InsurancePlan updateInsurancePlan(InsurancePlan insurancePlan, int statusid, int planid);
 	
 	List<InsuranceScheme> getInsuranceSchemeById(int planid);
+	
+	public void togglePlanStatus(int planId, int statusId);
 }

@@ -12,8 +12,10 @@ import com.fasterxml.jackson.databind.ser.std.StdArraySerializers.IntArraySerial
 import com.techlabs.insurance.entities.InsurancePlan;
 import com.techlabs.insurance.entities.InsuranceScheme;
 import com.techlabs.insurance.entities.Status;
+import com.techlabs.insurance.entities.UserStatus;
 import com.techlabs.insurance.exception.InsurancePlanNotFoundException;
 import com.techlabs.insurance.exception.InsuranceSchemeNotFoundException;
+import com.techlabs.insurance.exception.StatusNotFoundException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.repo.InsurancePlanRepo;
 import com.techlabs.insurance.repo.StatusRepo;
@@ -78,4 +80,18 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 		return insurancePlan.getSchemes();
 	}
 
+	@Override
+	public void togglePlanStatus(int planId, int newStatusId) {
+		InsurancePlan plan = insurancePlanRepo.findById(planId)
+                .orElseThrow(() -> new InsurancePlanNotFoundException(HttpStatus.BAD_REQUEST, "Plan not found with id: " + planId));
+
+        if(plan != null) {
+        	Status newStatus = statusRepo.findById(newStatusId).orElseThrow(() -> new StatusNotFoundException(HttpStatus.BAD_REQUEST, "Plan status not found with id: " + newStatusId));
+        	
+        	if(newStatus != null) {
+            	plan.setStatus(newStatus);
+        	}
+        	insurancePlanRepo.save(plan);
+        }		
+	}
 }
