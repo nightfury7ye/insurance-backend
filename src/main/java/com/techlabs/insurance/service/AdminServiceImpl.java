@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -39,12 +40,15 @@ public class AdminServiceImpl implements AdminService{
 		return adminRepo.findById(adminId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Admin not found with id"+adminId));
 	}
 
+	@Transactional
 	@Override
 	public Admin updateAdminProfile(int adminId, Admin updatedAdmin) {
 		Admin existingAdmin = adminRepo.findById(adminId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Admin not found with id"+adminId));
 		if(existingAdmin != null) {
 			existingAdmin.setFirstname(updatedAdmin.getFirstname());
 			existingAdmin.setLastname(updatedAdmin.getLastname());
+			existingAdmin.setEmail(updatedAdmin.getEmail());
+			existingAdmin.setPhoneno(updatedAdmin.getPhoneno());
 			
 			User existingUser = userRepo.findById(existingAdmin.getUser().getUserid()).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"User Not Found!!!"));
 			if(existingUser != null) {
@@ -77,6 +81,11 @@ public class AdminServiceImpl implements AdminService{
 		newAdmin.setUser(user);
 		
 		adminRepo.save(newAdmin);
+	}
+
+	@Override
+	public Admin getAdminByUsername(String username) {
+		return adminRepo.findByUserUsername(username);
 	}
 
 }

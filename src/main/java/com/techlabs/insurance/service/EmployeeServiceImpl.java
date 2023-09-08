@@ -46,6 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 	@Override
 	public Employee saveEmployee(Employee employee, int statusId) {
 		User user = employee.getUser() ;
+		user.setUsername(user.getUsername());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		Optional<Role> userRole= roleRepo.findById(3);
@@ -80,6 +81,8 @@ public class EmployeeServiceImpl implements EmployeeService{
 		if(existingEmployee != null) {
 			existingEmployee.setFirstname(updatedEmployee.getFirstname());
 			existingEmployee.setLastname(updatedEmployee.getLastname());
+			existingEmployee.setEmail(updatedEmployee.getEmail());
+			existingEmployee.setPhoneno(updatedEmployee.getPhoneno());
 			
 			User existingUser = userRepo.findById(existingEmployee.getUser().getUserid()).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"User Not Found!!!"));
 			if(existingUser != null) {
@@ -130,5 +133,10 @@ public class EmployeeServiceImpl implements EmployeeService{
         	employeeRepo.save(employee);
         	
         }
+	}
+
+	@Override
+	public Employee getEmployeeByUsername(String username) {
+		return employeeRepo.findByUserUsername(username);
 	}
 }

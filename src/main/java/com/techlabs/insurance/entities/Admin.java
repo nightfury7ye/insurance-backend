@@ -25,8 +25,16 @@ public class Admin {
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column
 	private int adminid;
+	
 	@Column
 	private String firstname;
+	
+	@Column
+	private String email;
+	
+	@Column
+	private long phoneno;
+	
 	@Column
 	private String lastname;
 	@OneToOne(cascade= CascadeType.ALL)

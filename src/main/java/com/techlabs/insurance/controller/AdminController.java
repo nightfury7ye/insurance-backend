@@ -19,10 +19,10 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 	
-	@GetMapping("/users/admin")
-	public Admin getAdminById(@RequestParam(name="adminid")int adminId) {
-		return adminService.getAdminById(adminId);
-	}
+//	@GetMapping("/users/admin")
+//	public Admin getAdminById(@RequestParam(name="adminid")int adminId) {
+//		return adminService.getAdminById(adminId);
+//	}
 	
 	@PutMapping("/users/admin/{adminid}")
 	public Admin updateAdminProfile(@PathVariable(name="adminid")int adminId, @RequestBody Admin updatedAdmin) {
@@ -32,5 +32,10 @@ public class AdminController {
 	@PostMapping("/users/admin")
 	public void saveAdmin(@RequestBody Admin admin) {
 		adminService.saveAdmin(admin);
+	}
+	
+	@GetMapping("/users/admin")
+	public Admin getAdminByUsername(@RequestParam(name="username")String username) {
+		return adminService.getAdminByUsername(username);
 	}
 }
