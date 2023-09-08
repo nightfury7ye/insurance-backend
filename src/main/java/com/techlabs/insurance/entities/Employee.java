@@ -34,6 +34,13 @@ public class Employee {
 	private String lastname;
 	
 	@Column
+	private String email;
+	
+	@Column
+	private long phoneno;
+	
+	
+	@Column
 	private double salary;
 	
 	@OneToOne(cascade= CascadeType.ALL)

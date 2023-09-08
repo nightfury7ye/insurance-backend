@@ -31,10 +31,19 @@ public class Agent {
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	@Column
 	private int agentid;
+	
 	@Column
 	private String firstname;
+	
 	@Column
 	private String lastname;
+	
+	@Column
+	private String email;
+	
+	@Column
+	private long phoneno;
+	
 	
 	@OneToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="userid")

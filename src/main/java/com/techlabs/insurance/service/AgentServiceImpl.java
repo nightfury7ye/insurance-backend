@@ -121,6 +121,8 @@ public class AgentServiceImpl implements AgentService{
 		if(existingAgent != null) {
 			existingAgent.setFirstname(updatedAgent.getFirstname());
 			existingAgent.setLastname(updatedAgent.getLastname());
+			existingAgent.setEmail(updatedAgent.getEmail());
+			existingAgent.setPhoneno(updatedAgent.getPhoneno());
 			existingAgent.setQualification(updatedAgent.getQualification());
 			
 			User existingUser = userRepo.findById(existingAgent.getUser().getUserid()).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"User Not Found!!!"));

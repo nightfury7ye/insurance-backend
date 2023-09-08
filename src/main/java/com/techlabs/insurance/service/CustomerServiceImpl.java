@@ -144,19 +144,16 @@ public class CustomerServiceImpl implements CustomerService{
 		Customer existingCustomer = customerRepo.findById(customerId)
 	            .orElseThrow(() -> new NoSuchElementException("Customer not found"));
 
-	    // Update the existing customer's properties with the values from the new customer
 	    existingCustomer.setFirstname(customer.getFirstname());
 	    existingCustomer.setLastname(customer.getLastname());
 	    existingCustomer.setEmail(customer.getEmail());
 	    existingCustomer.setPhoneno(customer.getPhoneno());
 
-	    // Update the address details
 	    existingCustomer.getAddress().setAddress(customer.getAddress().getAddress());
 	    existingCustomer.getAddress().setCity(customer.getAddress().getCity());
 	    existingCustomer.getAddress().setState(customer.getAddress().getState());
 	    existingCustomer.getAddress().setPincode(customer.getAddress().getPincode());
 
-	    // Update the nominee details
 	    existingCustomer.getNominee().setNomineename(customer.getNominee().getNomineename());
 	    existingCustomer.getNominee().setNomineeRelation(customer.getNominee().getNomineeRelation());
 

@@ -12,4 +12,5 @@ public interface EmployeeService {
 	public Employee getEmployeeById(int employeeId);
 	public void inactiveEmployee(int employeeId);
 	public void activeEmployee(int employeeId);
+	public Employee getEmployeeByUsername(String username);
 }

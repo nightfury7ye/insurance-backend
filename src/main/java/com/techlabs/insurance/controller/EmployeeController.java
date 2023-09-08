@@ -46,9 +46,14 @@ public class EmployeeController {
 		employeeService.updateEmployee(employeeId, updatedEmployee);
 	}
 	
-	@GetMapping("/users/employee/{employeeid}")
-	public Employee getEmployeeById(@PathVariable(name="employeeid")int employeeId) {
-		return employeeService.getEmployeeById(employeeId);
+//	@GetMapping("/users/employee/{employeeid}")
+//	public Employee getEmployeeById(@PathVariable(name="employeeid")int employeeId) {
+//		return employeeService.getEmployeeById(employeeId);
+//	}
+//	
+	@GetMapping("/users/employee")
+	public Employee getEmployeeByUsername(@RequestParam(name="username") String username) {
+		return employeeService.getEmployeeByUsername(username);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
