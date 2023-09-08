@@ -36,8 +36,7 @@ public class AdminServiceImpl implements AdminService{
 	
 	@Override
 	public Admin getAdminById(int adminId) {
-		Admin admin= adminRepo.findById(adminId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Admin not found with id"+adminId));
-		return admin;
+		return adminRepo.findById(adminId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Admin not found with id"+adminId));
 	}
 
 	@Override
