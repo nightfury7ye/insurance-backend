@@ -109,7 +109,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 	public void inactiveEmployee(int employeeId) {
 		Employee employee = employeeRepo.findById(employeeId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Employee Not Found!!!"));
         int newStatusId=2;
-        
+        System.out.println("inside inactiveEmployee");
         if(employee != null) {
         	UserStatus newStatus = new UserStatus();
         	newStatus.setStatusid(newStatusId);

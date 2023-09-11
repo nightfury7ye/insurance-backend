@@ -1,5 +1,6 @@
 package com.techlabs.insurance.entities;
 
+import java.sql.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,6 +46,9 @@ public class Customer {
 	
 	@Column
 	private String documentStatus;
+	
+	@Column
+	private Date DOB;
 	
 	@OneToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="addressid")

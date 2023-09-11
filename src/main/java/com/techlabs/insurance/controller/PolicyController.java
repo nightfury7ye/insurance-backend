@@ -22,7 +22,6 @@ public class PolicyController {
 	@Autowired
 	private PolicyService policyService;
 	
-	@PreAuthorize("hasRole('CUSTOMER')")
 	@GetMapping("customer/{customerid}/policies")
 	public ResponseEntity<Page<Policy>> getPoliciesByCustomer(@PathVariable(name="customerid") int customerid, @RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		return policyService.getPoliciesByCustomer(customerid, page, size); 

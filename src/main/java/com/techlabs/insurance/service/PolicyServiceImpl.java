@@ -126,6 +126,7 @@ public class PolicyServiceImpl implements PolicyService{
 				if(i == 0) {
 					System.out.println("inside 0");
 					payment.setDate(Date.valueOf(date1));
+					payment.setAmount(policy.getPremiumamount());
 					Optional<PaymentStatus> status= paymentStatusRepo.findById(1);
 					payment.setStatus(status.get());
 					payments.add(payment);
