@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Commision;
 import com.techlabs.insurance.entities.Customer;
 import com.techlabs.insurance.entities.Policy;
+import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.payload.CommissionDto;
 import com.techlabs.insurance.repo.AgentRepo;
 import com.techlabs.insurance.repo.CommisionRepo;
@@ -40,6 +42,8 @@ public class CommisionServiceImpl implements CommisionService{
 		commision.setDate(Date.valueOf(date));
 		commision.setRequestStatus("pending");
 		commision.setWithdrawStatus("pending");
+		agent.setTotalcommision(agent.getTotalcommision() + amount);
+		agentRepo.save(agent);
 		return commisionRepo.save(commision);
 	}
 
@@ -52,7 +56,7 @@ public class CommisionServiceImpl implements CommisionService{
 	
 	@Override
 	public Page<CommissionDto> getCommisionsForAgent(int agentid, int page, int pageSize) {
-		Agent agent = agentRepo.findById(agentid).orElseThrow();
+		Agent agent = agentRepo.findById(agentid).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Agent Not Found!!!"));
 
         Pageable pageable = PageRequest.of(page, pageSize);
 

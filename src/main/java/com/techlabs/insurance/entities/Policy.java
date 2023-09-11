@@ -66,6 +66,7 @@ public class Policy {
 	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name="policyno")
+	@JsonIgnore
 	private List<Claim> claims;
 	
 	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})

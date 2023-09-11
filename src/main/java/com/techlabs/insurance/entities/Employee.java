@@ -39,7 +39,6 @@ public class Employee {
 	@Column
 	private long phoneno;
 	
-	
 	@Column
 	private double salary;
 	

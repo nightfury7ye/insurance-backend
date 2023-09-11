@@ -29,6 +29,11 @@ public class CustomerController {
 		return customerService.registerCustomer(customer);
 	}
 	
+	@PostMapping("/users/agent/{agentid}/customer")
+	public Customer registerCustomerbyAgent(@RequestBody Customer customer,@PathVariable(name="agentid") int agentid) {
+		return customerService.registerCustomerByAgent(customer, agentid);
+	}
+	
 	@GetMapping("/users/customer")
 	public Customer getCustomerByUsername(@RequestParam(name="username") String username) {
 		return customerService.getCustomerByUsername(username);
@@ -88,5 +93,11 @@ public class CustomerController {
         customerService.inactiveCustomerStatus(customerId);
         return ResponseEntity.ok("Customer status disabled");
     }
+	
+//	@PreAuthorize("hasRole('EMPLOYEE')")
+	@PutMapping("/customer/{customerId}/document-status")
+	public void updateDocumentStatus(@PathVariable(name="customerId") int customerId) {
+		customerService.updateDocumentStatus(customerId);
+	}
 	
 }

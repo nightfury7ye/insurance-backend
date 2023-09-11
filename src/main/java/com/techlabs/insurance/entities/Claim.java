@@ -36,6 +36,8 @@ public class Claim {
 	private long bank_accno;
 	@Column
 	private String bank_ifsc_code;
+	@Column 
+	private String RequestStatus;
 	@Column
 	private Date date;
 	@ManyToOne(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})

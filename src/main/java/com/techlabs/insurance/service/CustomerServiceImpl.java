@@ -12,12 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Customer;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.UserStatus;
 import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.payload.RegisterDto;
+import com.techlabs.insurance.repo.AgentRepo;
 import com.techlabs.insurance.repo.CustomerRepo;
 import com.techlabs.insurance.repo.PolicyRepo;
 import com.techlabs.insurance.repo.UserRepo;
@@ -41,6 +43,8 @@ public class CustomerServiceImpl implements CustomerService{
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private UserStatusRepo userStatusRepo;
+	@Autowired
+	private AgentRepo agentRepo;
 	
 	@Override
 	public Customer registerCustomer(Customer customer) {
@@ -49,6 +53,7 @@ public class CustomerServiceImpl implements CustomerService{
 		registerDto.setPassword(customer.getUser().getPassword());
 		User user = authService.register(registerDto, 1);
 		customer.setUser(user);
+		customer.setUserStatus(userStatusRepo.findById(1).get());
 		return customerRepo.save(customer);
 	}
 
@@ -167,6 +172,26 @@ public class CustomerServiceImpl implements CustomerService{
 		}
 
 	    return customerRepo.save(existingCustomer);
+	}
+
+	@Override
+	public Customer registerCustomerByAgent(Customer customer, int agentid) {
+		RegisterDto registerDto = new RegisterDto();
+		registerDto.setUsername(customer.getUser().getUsername());
+		registerDto.setPassword(customer.getUser().getPassword());
+		User user = authService.register(registerDto, 1);
+		customer.setUser(user);
+		Agent agent = agentRepo.findById(agentid).orElseThrow();
+		customer.setAgent(agent);
+		customer.setUserStatus(userStatusRepo.findById(1).get());
+		return customerRepo.save(customer);
+	}
+
+	@Override
+	public void updateDocumentStatus(int customerId) {
+		Customer customer = customerRepo.findById(customerId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Customer Not Found!!!"));
+		customer.setDocumentStatus("Approved");
+		customerRepo.save(customer);
 	}
 	
 }

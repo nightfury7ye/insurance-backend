@@ -59,12 +59,13 @@ public class EmployeeController {
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/users/inactiveemployee/{employeeid}")
 	public void inactiveEmployee(@PathVariable(name="employeeid")int employeeId) {
+		System.out.println("inactiveEmployee controller");
 		employeeService.inactiveEmployee(employeeId);
 	}
 	
-	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/users/activeemployee/{employeeid}")
-	public void activeEmployee(@PathVariable(name="employeeid")int employeeId) {
-		employeeService.inactiveEmployee(employeeId);
-	}
+//	@PreAuthorize("hasRole('ADMIN')")
+//	@PostMapping("/users/activeemployee/{employeeid}")
+//	public void activeEmployee(@PathVariable(name="employeeid")int employeeId) {
+//		employeeService.inactiveEmployee(employeeId);
+//	}
 }
