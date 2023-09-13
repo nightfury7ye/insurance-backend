@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +17,7 @@ import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.exception.UserAPIException;
+import com.techlabs.insurance.exception.UsernameAlreadyExistsException;
 import com.techlabs.insurance.repo.AdminRepo;
 import com.techlabs.insurance.repo.RoleRepo;
 import com.techlabs.insurance.repo.UserRepo;
@@ -63,8 +65,13 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public void saveAdmin(Admin admin) {
+	public ResponseEntity<Admin> saveAdmin(Admin admin) {
 		User user = new User();
+		
+		if(userRepo.existsByUsername(admin.getUser().getUsername())) {
+			throw new UsernameAlreadyExistsException(HttpStatus.BAD_REQUEST, "Username already exists!!!");
+		}
+		
 		user.setUsername(admin.getUser().getUsername());
 		user.setPassword(passwordEncoder.encode(admin.getUser().getPassword()));
 		
@@ -81,6 +88,7 @@ public class AdminServiceImpl implements AdminService{
 		newAdmin.setUser(user);
 		
 		adminRepo.save(newAdmin);
+		return new ResponseEntity<>(newAdmin,HttpStatus.OK) ;
 	}
 
 	@Override

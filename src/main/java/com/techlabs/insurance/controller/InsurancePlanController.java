@@ -3,6 +3,7 @@ package com.techlabs.insurance.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class InsurancePlanController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/insurance-plan")
-	public InsurancePlan saveInsurancePlan(@RequestBody InsurancePlan insurancePlan,@RequestParam(name="statusid") int statusid) {
+	public ResponseEntity<InsurancePlan> saveInsurancePlan(@RequestBody InsurancePlan insurancePlan,@RequestParam(name="statusid") int statusid) {
 		return insurancePlanService.saveInsurancePlan(insurancePlan, statusid);
 	}
 	

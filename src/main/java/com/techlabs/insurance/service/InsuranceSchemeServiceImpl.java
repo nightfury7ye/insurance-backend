@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -13,6 +14,8 @@ import com.techlabs.insurance.entities.SchemeDetails;
 import com.techlabs.insurance.entities.Status;
 import com.techlabs.insurance.exception.InsurancePlanNotFoundException;
 import com.techlabs.insurance.exception.InsuranceSchemeNotFoundException;
+import com.techlabs.insurance.exception.PlanAlreadyExistsException;
+import com.techlabs.insurance.exception.SchemeAlreadyExistsException;
 import com.techlabs.insurance.exception.StatusNotFoundException;
 import com.techlabs.insurance.repo.InsurancePlanRepo;
 import com.techlabs.insurance.repo.InsuranceSchemeRepo;
@@ -32,10 +35,15 @@ public class InsuranceSchemeServiceImpl implements InsuranceSchemeService{
 	private StatusRepo statusRepo;
 
 	@Override
-	public InsuranceScheme saveInsuranceScheme(InsuranceScheme insuranceScheme, int planid, int statusid) {
+	public ResponseEntity<InsuranceScheme> saveInsuranceScheme(InsuranceScheme insuranceScheme, int planid, int statusid) {
 		System.out.println("At saveInsuranceScheme Before");
 		InsurancePlan insurancePlan = insurancePlanRepo.findById(planid).orElseThrow(()-> new InsurancePlanNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Plan Not Found!!!"));
 		Optional<Status> status = statusRepo.findById(statusid);
+		
+		if(insurancePlanRepo.existsBySchemename(insuranceScheme.getSchemename())) {
+			throw new SchemeAlreadyExistsException(HttpStatus.BAD_REQUEST, "Plan Already Exists!!!");
+		}
+		
 		if(status.isPresent()) {
 			insuranceScheme.setStatus(status.get());
 		}else {
@@ -44,8 +52,8 @@ public class InsuranceSchemeServiceImpl implements InsuranceSchemeService{
 		insuranceScheme.setPlan(insurancePlan);
 		System.out.println("At saveInsuranceScheme After");
 		
-		return insuranceSchemeRepo.save(insuranceScheme);
-	
+		insuranceSchemeRepo.save(insuranceScheme);
+		return new ResponseEntity<>(insuranceScheme,HttpStatus.OK) ;
 	}
 	
 	@Override
@@ -64,7 +72,7 @@ public class InsuranceSchemeServiceImpl implements InsuranceSchemeService{
 		Optional<Status> status = statusRepo.findById(statusid);
 			InsuranceScheme existingInsuranceScheme = insuranceScheme;
 	        
-	        existingInsuranceScheme.setScheme_name(insuranceSchemeData.getScheme_name());
+	        existingInsuranceScheme.setSchemename(insuranceSchemeData.getSchemename());
 	        
 	        SchemeDetails schemeDetailsData = insuranceSchemeData.getSchemeDetails();
 	        SchemeDetails existingSchemeDetails = existingInsuranceScheme.getSchemeDetails();

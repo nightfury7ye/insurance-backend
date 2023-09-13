@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -15,6 +16,7 @@ import com.techlabs.insurance.entities.Status;
 import com.techlabs.insurance.entities.UserStatus;
 import com.techlabs.insurance.exception.InsurancePlanNotFoundException;
 import com.techlabs.insurance.exception.InsuranceSchemeNotFoundException;
+import com.techlabs.insurance.exception.PlanAlreadyExistsException;
 import com.techlabs.insurance.exception.StatusNotFoundException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.repo.InsurancePlanRepo;
@@ -32,14 +34,18 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 	private StatusRepo statusRepo;
 
 	@Override
-	public InsurancePlan saveInsurancePlan(InsurancePlan insurancePlan, int statusid) {
+	public ResponseEntity<InsurancePlan> saveInsurancePlan(InsurancePlan insurancePlan, int statusid) {
 		Optional<Status> status = statusRepo.findById(statusid);
+		if(insurancePlanRepo.existsByPlanname(insurancePlan.getPlanname())) {
+			throw new PlanAlreadyExistsException(HttpStatus.BAD_REQUEST, "Plan Already Exists!!!");
+		}
 		if(status.isPresent()) {
 			insurancePlan.setStatus(status.get());
 		}else {
 			insurancePlan.setStatus(statusRepo.findById(1).get());
 		}
-		return insurancePlanRepo.save(insurancePlan);
+		insurancePlanRepo.save(insurancePlan);
+		return new ResponseEntity<>(insurancePlan,HttpStatus.OK) ;
 	}
 
 	@Override
@@ -62,7 +68,7 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 		InsurancePlan insurancePlan = insurancePlanRepo.findById(planid).orElseThrow(()-> new InsurancePlanNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Plan Not Found!!!"));
 		Optional<Status> status = statusRepo.findById(statusid);
 		
-			insurancePlan.setPlan_name(insurancePlanData.getPlan_name());
+			insurancePlan.setPlanname(insurancePlanData.getPlanname());
 			if(status.isPresent()) {
 				insurancePlan.setStatus(status.get());
 			}else {
