@@ -25,7 +25,7 @@ public class AgentController {
 	private AgentService agentService;
 	
 	@PostMapping("/users/agent") 
-	Agent addAgent(@RequestBody Agent agent, @RequestParam(name="statusid")int statusId) {
+	ResponseEntity<Agent> addAgent(@RequestBody Agent agent, @RequestParam(name="statusid")int statusId) {
 		return agentService.addAgent(agent, statusId);
 	}
 	

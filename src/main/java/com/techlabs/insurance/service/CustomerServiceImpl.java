@@ -18,6 +18,7 @@ import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.UserStatus;
 import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.UserAPIException;
+import com.techlabs.insurance.exception.UsernameAlreadyExistsException;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.AgentRepo;
 import com.techlabs.insurance.repo.CustomerRepo;
@@ -47,14 +48,20 @@ public class CustomerServiceImpl implements CustomerService{
 	private AgentRepo agentRepo;
 	
 	@Override
-	public Customer registerCustomer(Customer customer) {
+	public ResponseEntity<Customer> registerCustomer(Customer customer) {
 		RegisterDto registerDto = new RegisterDto();
+		
+		if(userRepo.existsByUsername(customer.getUser().getUsername())) {
+			throw new UsernameAlreadyExistsException(HttpStatus.BAD_REQUEST, "Username already exists!!!");
+		}
+		
 		registerDto.setUsername(customer.getUser().getUsername());
 		registerDto.setPassword(customer.getUser().getPassword());
 		User user = authService.register(registerDto, 1);
 		customer.setUser(user);
 		customer.setUserStatus(userStatusRepo.findById(1).get());
-		return customerRepo.save(customer);
+		customerRepo.save(customer);
+		return new ResponseEntity<>(customer,HttpStatus.OK) ;
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import com.techlabs.insurance.entities.Agent;
 
 public interface AgentService {
-	public Agent addAgent(Agent agent, int statusId);
+	public ResponseEntity<Agent> addAgent(Agent agent, int statusId);
 	public void deleteAgent(int agentId);
 	public Agent updateAgentStatus(int agentId, int statusId);
 	public ResponseEntity<Page<Agent>> getAllAgents(int page, int size);

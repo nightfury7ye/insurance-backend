@@ -28,7 +28,7 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;
 	
-	//@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/users/employee")
 	ResponseEntity<Employee> saveEmployee(@RequestBody Employee employee, @RequestParam(name="statusid")int statusId) {
 		return employeeService.saveEmployee(employee, statusId);

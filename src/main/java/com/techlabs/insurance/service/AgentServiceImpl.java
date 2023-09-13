@@ -20,6 +20,7 @@ import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.UserStatus;
 import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.UserAPIException;
+import com.techlabs.insurance.exception.UsernameAlreadyExistsException;
 import com.techlabs.insurance.payload.RegisterDto;
 import com.techlabs.insurance.repo.AgentRepo;
 import com.techlabs.insurance.repo.CustomerRepo;
@@ -50,8 +51,13 @@ public class AgentServiceImpl implements AgentService{
 	private UserRepo userRepo;
 	
 	@Override
-	public Agent addAgent(Agent agent, int statusId) {
+	public ResponseEntity<Agent> addAgent(Agent agent, int statusId) {
 		User user = agent.getUser();
+		
+		if(userRepo.existsByUsername(agent.getUser().getUsername())) {
+			throw new UsernameAlreadyExistsException(HttpStatus.BAD_REQUEST, "Username already exists!!!");
+		}
+		user.setUsername(user.getUsername());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		Optional<Role> userRole= roleRepo.findById(2);
@@ -68,7 +74,8 @@ public class AgentServiceImpl implements AgentService{
 		}else {
 			agent.setUserStatus(userStatusRepo.findById(1).get());
 		}
-		return agentRepo.save(agent);
+		agentRepo.save(agent);
+		return new ResponseEntity<>(agent,HttpStatus.OK) ;
 	}
 
 	@Override

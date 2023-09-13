@@ -25,7 +25,7 @@ public class CustomerController {
 	private CustomerService customerService;
 	
 	@PostMapping("/users/customer")
-	public Customer registerCustomer(@RequestBody Customer customer) {
+	public ResponseEntity<Customer> registerCustomer(@RequestBody Customer customer) {
 		return customerService.registerCustomer(customer);
 	}
 	

@@ -1,9 +1,11 @@
 package com.techlabs.insurance.service;
 
+import org.springframework.http.ResponseEntity;
+
 import com.techlabs.insurance.entities.InsuranceScheme;
 
 public interface InsuranceSchemeService {
-	public InsuranceScheme saveInsuranceScheme(InsuranceScheme insuranceScheme, int planid, int statusid);
+	public ResponseEntity<InsuranceScheme> saveInsuranceScheme(InsuranceScheme insuranceScheme, int planid, int statusid);
 
 	public String deleteInsuranceScheme(int schemeid);
 	

@@ -46,5 +46,8 @@ public class GlobalExceptionHandler {
 	}
 	
 	
-    
+	@ExceptionHandler(PlanAlreadyExistsException.class)
+	public ResponseEntity<?> handlePlanAlreadyExistsException(PlanAlreadyExistsException e){
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
 }

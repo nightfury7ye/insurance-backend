@@ -67,6 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 		}else {
 			employee.setUserStatus(userStatusRepo.findById(1).get());
 		}
+		employeeRepo.save(employee);
 		return new ResponseEntity<>(employee,HttpStatus.OK) ;
 	}
 
