@@ -20,6 +20,7 @@ import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.UserStatus;
 import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.UserAPIException;
+import com.techlabs.insurance.exception.UsernameAlreadyExistsException;
 import com.techlabs.insurance.repo.EmployeeRepo;
 import com.techlabs.insurance.repo.RoleRepo;
 import com.techlabs.insurance.repo.UserRepo;
@@ -44,8 +45,12 @@ public class EmployeeServiceImpl implements EmployeeService{
 	UserStatusRepo userStatusRepo;
 	
 	@Override
-	public Employee saveEmployee(Employee employee, int statusId) {
+	public ResponseEntity<Employee> saveEmployee(Employee employee, int statusId) {
 		User user = employee.getUser() ;
+		
+		if(userRepo.existsByUsername(employee.getUser().getUsername())) {
+			throw new UsernameAlreadyExistsException(HttpStatus.BAD_REQUEST, "Username already exists!!!");
+		}
 		user.setUsername(user.getUsername());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
@@ -62,7 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 		}else {
 			employee.setUserStatus(userStatusRepo.findById(1).get());
 		}
-		return employeeRepo.save(employee);
+		return new ResponseEntity<>(employee,HttpStatus.OK) ;
 	}
 
 	@Override
