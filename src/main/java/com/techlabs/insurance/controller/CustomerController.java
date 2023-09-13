@@ -64,12 +64,18 @@ public class CustomerController {
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
-	@GetMapping("/disabled_customers")
+	@GetMapping("/disabled-customers")
 	public Page<Customer> getAllDisabledCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
 		return customerService.getAllDisabledCustomers(page, size);
 	}
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
+	@GetMapping("/pending-customers")
+	public Page<Customer> getAllPendingCustomers(@RequestParam(defaultValue="0") int page,@RequestParam(defaultValue="5") int size){
+		return customerService.getAllDisabledCustomers(page, size);
+	}
+	
+//	@PreAuthorize("hasRole('EMPLOYEE')")
 	@PutMapping("/users/customer/{customerid}/status/{statusid}")
 	public Customer updateCustomerStatus(@PathVariable(name="customerid")int customerId, @PathVariable(name="statusid")int statusId) {
 		return customerService.updateCustomerStatus(customerId, statusId);

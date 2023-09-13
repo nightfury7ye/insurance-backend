@@ -113,7 +113,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         if(employee != null) {
         	UserStatus newStatus = new UserStatus();
         	newStatus.setStatusid(newStatusId);
-        	newStatus.setStatusname("INACTIVE");
+        	newStatus.setStatusname("inactive");
         	employee.setUserStatus(newStatus);
         	employeeRepo.save(employee);
         	
@@ -128,7 +128,7 @@ public class EmployeeServiceImpl implements EmployeeService{
         if(employee != null) {
         	UserStatus newStatus = new UserStatus();
         	newStatus.setStatusid(newStatusId);
-        	newStatus.setStatusname("ACTIVE");
+        	newStatus.setStatusname("active");
         	employee.setUserStatus(newStatus);
         	employeeRepo.save(employee);
         	

@@ -94,13 +94,21 @@ public class CustomerServiceImpl implements CustomerService{
 		
 	}
 
+//	@Override
+//	public Page<Customer> getAllDisabledCustomers(int page, int size) {
+//		int disabledStatusId = 2;
+//		Pageable pageable = PageRequest.of(page, size);
+//
+//		return customerRepo.findByUserStatusStatusid(disabledStatusId, pageable);
+//		//return customerRepo.findById(disabledStatusId);
+//	}
+	
 	@Override
 	public Page<Customer> getAllDisabledCustomers(int page, int size) {
-		int disabledStatusId = 2;
+		String docStatus = "Pending";
 		Pageable pageable = PageRequest.of(page, size);
 
-		return customerRepo.findByUserStatusStatusid(disabledStatusId, pageable);
-		//return customerRepo.findById(disabledStatusId);
+		return customerRepo.findByDocumentStatus(docStatus, pageable);
 	}
 
 	@Override
