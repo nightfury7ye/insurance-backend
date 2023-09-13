@@ -50,6 +50,7 @@ public class InsurancePlanController {
 	
 	@PostMapping("/insurance-plan/togglestatus")
 	public void togglePlanStatus(@RequestParam(name="planid")int planId, @RequestParam(name="statusid")int newStatusId) {
+		System.out.println(planId);
 		insurancePlanService.togglePlanStatus(planId, newStatusId);
 	}
 }

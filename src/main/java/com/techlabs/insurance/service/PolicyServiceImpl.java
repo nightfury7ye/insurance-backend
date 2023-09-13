@@ -207,7 +207,8 @@ public class PolicyServiceImpl implements PolicyService{
 	@Override
 	public ResponseEntity<Page<Policy>> getPoliciesByCustomer(int customerid, int pageno, int pagesize) {
 		Pageable pageable = PageRequest.of(pageno, pagesize);
-		Page<Policy> policies =policyRepo.findAll(pageable);
+//		Page<Policy> policies =policyRepo.findAll(pageable);
+		Page<Policy> policies =policyRepo.findByCustomerCustomerid(customerid, pageable);
 		if(policies.isEmpty()) {
 			throw new ListIsEmptyException(HttpStatus.BAD_REQUEST, "Policies List Is Empty!!!");
 		}
