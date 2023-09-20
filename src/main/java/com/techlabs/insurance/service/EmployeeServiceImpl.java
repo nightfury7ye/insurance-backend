@@ -49,7 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 		User user = employee.getUser() ;
 		
 		if(userRepo.existsByUsername(employee.getUser().getUsername())) {
-			throw new UsernameAlreadyExistsException(HttpStatus.BAD_REQUEST, "Username already exists!!!");
+			throw new UsernameAlreadyExistsException("Username already exists!!!", HttpStatus.BAD_REQUEST);
 		}
 		user.setUsername(user.getUsername());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));

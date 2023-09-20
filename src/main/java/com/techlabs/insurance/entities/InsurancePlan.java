@@ -29,7 +29,7 @@ public class InsurancePlan {
 	@Column
 	private int planid;
 	@Column
-	private String planname;
+	private String plan_name;
 	
 	@OneToMany(cascade= CascadeType.ALL)
 	@JoinColumn(name="planid")

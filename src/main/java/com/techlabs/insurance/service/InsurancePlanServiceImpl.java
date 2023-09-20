@@ -36,9 +36,9 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 	@Override
 	public ResponseEntity<InsurancePlan> saveInsurancePlan(InsurancePlan insurancePlan, int statusid) {
 		Optional<Status> status = statusRepo.findById(statusid);
-		if(insurancePlanRepo.existsByPlanname(insurancePlan.getPlanname())) {
-			throw new PlanAlreadyExistsException(HttpStatus.BAD_REQUEST, "Plan Already Exists!!!");
-		}
+//		if(insurancePlanRepo.existsByPlan_name(insurancePlan.getPlan_name())) {
+//			throw new PlanAlreadyExistsException(HttpStatus.BAD_REQUEST, "Plan Already Exists!!!");
+//		}
 		if(status.isPresent()) {
 			insurancePlan.setStatus(status.get());
 		}else {
@@ -68,7 +68,7 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 		InsurancePlan insurancePlan = insurancePlanRepo.findById(planid).orElseThrow(()-> new InsurancePlanNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Plan Not Found!!!"));
 		Optional<Status> status = statusRepo.findById(statusid);
 		
-			insurancePlan.setPlanname(insurancePlanData.getPlanname());
+			insurancePlan.setPlan_name(insurancePlanData.getPlan_name());
 			if(status.isPresent()) {
 				insurancePlan.setStatus(status.get());
 			}else {

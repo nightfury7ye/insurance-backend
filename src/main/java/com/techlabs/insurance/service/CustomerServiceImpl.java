@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService{
 		RegisterDto registerDto = new RegisterDto();
 		
 		if(userRepo.existsByUsername(customer.getUser().getUsername())) {
-			throw new UsernameAlreadyExistsException(HttpStatus.BAD_REQUEST, "Username already exists!!!");
+			throw new UsernameAlreadyExistsException("Username already exists!!!", HttpStatus.BAD_REQUEST);
 		}
 		
 		registerDto.setUsername(customer.getUser().getUsername());
@@ -191,16 +191,17 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public Customer registerCustomerByAgent(Customer customer, int agentid) {
+	public ResponseEntity<Customer> registerCustomerByAgent(Customer customer, int agentid) {
 		RegisterDto registerDto = new RegisterDto();
 		registerDto.setUsername(customer.getUser().getUsername());
 		registerDto.setPassword(customer.getUser().getPassword());
 		User user = authService.register(registerDto, 1);
 		customer.setUser(user);
-		Agent agent = agentRepo.findById(agentid).orElseThrow();
+		Agent agent = agentRepo.findById(agentid).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Agent Not Found!!!"));
 		customer.setAgent(agent);
 		customer.setUserStatus(userStatusRepo.findById(1).get());
-		return customerRepo.save(customer);
+		customerRepo.save(customer);
+		return new ResponseEntity<>(customer,HttpStatus.OK) ;
 	}
 
 	@Override
