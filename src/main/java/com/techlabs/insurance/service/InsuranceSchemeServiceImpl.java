@@ -41,7 +41,7 @@ public class InsuranceSchemeServiceImpl implements InsuranceSchemeService{
 		Optional<Status> status = statusRepo.findById(statusid);
 		
 		if(insurancePlanRepo.existsBySchemename(insuranceScheme.getSchemename())) {
-			throw new SchemeAlreadyExistsException(HttpStatus.BAD_REQUEST, "Plan Already Exists!!!");
+			throw new SchemeAlreadyExistsException(HttpStatus.BAD_REQUEST, "Scheme Already Exists!!!");
 		}
 		
 		if(status.isPresent()) {
