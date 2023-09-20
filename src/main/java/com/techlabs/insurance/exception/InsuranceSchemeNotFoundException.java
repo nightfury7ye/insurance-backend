@@ -10,6 +10,9 @@ public class InsuranceSchemeNotFoundException extends RuntimeException{
 		this.message = message;
 		this.status = status;
 	}
+	public String getMessage() {
+		return message;
+	}
 	@Override
 	public String toString() {
 		return "InsuranceSchemeNotFoundException [message=" + message + ", status=" + status + "]";

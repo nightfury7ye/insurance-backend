@@ -55,7 +55,7 @@ public class AgentServiceImpl implements AgentService{
 		User user = agent.getUser();
 		
 		if(userRepo.existsByUsername(agent.getUser().getUsername())) {
-			throw new UsernameAlreadyExistsException(HttpStatus.BAD_REQUEST, "Username already exists!!!");
+			throw new UsernameAlreadyExistsException("Username already exists!!!", HttpStatus.BAD_REQUEST);
 		}
 		user.setUsername(user.getUsername());
 		user.setPassword(passwordEncoder.encode(user.getPassword()));

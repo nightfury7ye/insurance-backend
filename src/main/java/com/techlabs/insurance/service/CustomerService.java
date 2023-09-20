@@ -8,7 +8,7 @@ import com.techlabs.insurance.entities.Policy;
 
 public interface CustomerService {
 	public ResponseEntity<Customer> registerCustomer(Customer customer);
-	public Customer registerCustomerByAgent(Customer customer, int agentid);
+	public ResponseEntity<Customer> registerCustomerByAgent(Customer customer, int agentid);
 	public ResponseEntity<Page<Customer>> getAllCustomers(int page, int size);
 	public ResponseEntity<Page<Customer>> getCustomersByAgentid(int agentid, int page, int size);
 	public Customer getCustomerById(int customerId);

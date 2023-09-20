@@ -10,6 +10,12 @@ public class PlanAlreadyExistsException extends RuntimeException{
 		this.message = message;
 		this.status = status;
 	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	@Override
 	public String toString() {
 		return "PlanAlreadyExistsException [message=" + message + ", status=" + status + "]";

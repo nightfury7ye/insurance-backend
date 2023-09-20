@@ -42,7 +42,7 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 		if(status.isPresent()) {
 			insurancePlan.setStatus(status.get());
 		}else {
-			insurancePlan.setStatus(statusRepo.findById(1).get());
+			insurancePlan.setStatus(statusRepo.findById(1).get()); 
 		}
 		insurancePlanRepo.save(insurancePlan);
 		return new ResponseEntity<>(insurancePlan,HttpStatus.OK) ;

@@ -10,6 +10,9 @@ public class ListIsEmptyException extends RuntimeException{
 		this.message = message;
 		this.status = status;
 	}
+	public String getMessage() {
+		return message;
+	}
 	@Override
 	public String toString() {
 		return "ListIsEmptyException [message=" + message + ", status=" + status + "]";

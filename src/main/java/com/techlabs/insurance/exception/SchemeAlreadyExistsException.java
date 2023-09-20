@@ -10,6 +10,9 @@ public class SchemeAlreadyExistsException extends RuntimeException{
 		this.message = message;
 		this.status = status;
 	}
+	public String getMessage() {
+		return message;
+	}
 	@Override
 	public String toString() {
 		return "SchemeAlreadyExistsException [message=" + message + ", status=" + status + "]";

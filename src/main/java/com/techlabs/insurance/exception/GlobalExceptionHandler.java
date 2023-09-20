@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -41,13 +42,23 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(UsernameAlreadyExistsException.class)
-	public ResponseEntity<?> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e){
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	public ResponseEntity<?> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e, WebRequest webRequest){
+		System.out.println("Exception msg: " + e);
+		return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
 	}
 	
 	
 	@ExceptionHandler(PlanAlreadyExistsException.class)
 	public ResponseEntity<?> handlePlanAlreadyExistsException(PlanAlreadyExistsException e){
+		System.out.println("Exception : " + e);
+		System.out.println("Exception msg: " + e.getMessage());
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(SchemeAlreadyExistsException.class)
+	public ResponseEntity<?> handleSchemeAlreadyExistsException(SchemeAlreadyExistsException e){
+		System.out.println("Exception : " + e);
+		System.out.println("Exception msg: " + e.getMessage());
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 }

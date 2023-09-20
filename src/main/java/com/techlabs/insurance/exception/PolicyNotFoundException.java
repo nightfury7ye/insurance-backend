@@ -10,6 +10,9 @@ public class PolicyNotFoundException extends RuntimeException{
 		this.message = message;
 		this.status = status;
 	}
+	public String getMessage() {
+		return message;
+	}
 	@Override
 	public String toString() {
 		return "PolicyNotFoundException [message=" + message + ", status=" + status + "]";
