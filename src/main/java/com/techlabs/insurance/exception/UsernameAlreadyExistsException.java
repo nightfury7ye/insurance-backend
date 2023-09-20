@@ -10,6 +10,9 @@ public class UsernameAlreadyExistsException extends RuntimeException{
 		this.message = message;
 		this.status = status;
 	}
+	public String getMessage() {
+		return message;
+	}
 	@Override
 	public String toString() {
 		return "UsernameAlreadyExistsException [message=" + message + ", status=" + status + "]";

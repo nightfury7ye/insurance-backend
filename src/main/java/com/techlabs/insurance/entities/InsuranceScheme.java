@@ -32,7 +32,7 @@ public class InsuranceScheme {
 	@Column
 	private int schemeid;
 	@Column
-	private String scheme_name;
+	private String schemename;
 	
 	@OneToOne(cascade= CascadeType.ALL)
 	@JoinColumn(name="detailid")
