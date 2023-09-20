@@ -2,10 +2,15 @@ package com.techlabs.insurance.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class PlanAlreadyExistsException extends RuntimeException{
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class IllegalArgumentException extends RuntimeException{
 	private String message;
 	private HttpStatus status;
-	public PlanAlreadyExistsException(HttpStatus status, String message) {
+	public IllegalArgumentException(String message, HttpStatus status) {
 		super();
 		this.message = message;
 		this.status = status;
@@ -18,6 +23,7 @@ public class PlanAlreadyExistsException extends RuntimeException{
 	}
 	@Override
 	public String toString() {
-		return "PlanAlreadyExistsException [message=" + message + ", status=" + status + "]";
+		return "IllegalArgumentException [message=" + message + ", status=" + status + "]";
 	}
 }
+

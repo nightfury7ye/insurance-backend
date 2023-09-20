@@ -7,5 +7,5 @@ import com.techlabs.insurance.entities.InsurancePlan;
 public interface InsurancePlanRepo  extends JpaRepository<InsurancePlan, Integer>{
 	public boolean existsByPlanname(String planname);
 
-	public boolean existsBySchemename(String schemename);
+	public boolean existsBySchemesSchemename(String schemename);
 }

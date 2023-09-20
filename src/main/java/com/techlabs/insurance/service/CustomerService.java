@@ -8,14 +8,14 @@ import com.techlabs.insurance.entities.Policy;
 
 public interface CustomerService {
 	public ResponseEntity<Customer> registerCustomer(Customer customer);
-	public Customer registerCustomerByAgent(Customer customer, int agentid);
+	public ResponseEntity<Customer> registerCustomerByAgent(Customer customer, int agentid);
 	public ResponseEntity<Page<Customer>> getAllCustomers(int page, int size);
 	public ResponseEntity<Page<Customer>> getCustomersByAgentid(int agentid, int page, int size);
 	public Customer getCustomerById(int customerId);
 	public void deleteCustomer(int customerId);
 	public Page<Customer> getAllDisabledCustomers(int page, int size);
 	public Customer updateCustomerStatus(int customerId, int newStatusId);
-	public Customer updateCustomer(int customerId, Customer customer);
+	public ResponseEntity<Customer> updateCustomer(int customerId, Customer customer);
 	public void activeCustomerStatus(int customerId);
 	public void inactiveCustomerStatus(int customerId);
 	public void updateDocumentStatus(int customerId);

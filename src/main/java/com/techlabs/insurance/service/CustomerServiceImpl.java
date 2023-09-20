@@ -1,7 +1,10 @@
 package com.techlabs.insurance.service;
 
-import java.util.NoSuchElementException;
+import java.sql.Date;
 import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +19,14 @@ import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Customer;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.UserStatus;
+import com.techlabs.insurance.exception.InvalidEmailException;
+import com.techlabs.insurance.exception.InvalidFirstnameException;
+import com.techlabs.insurance.exception.InvalidLastnameException;
+import com.techlabs.insurance.exception.InvalidPasswordException;
+import com.techlabs.insurance.exception.InvalidPhonenoException;
 import com.techlabs.insurance.exception.ListIsEmptyException;
+import com.techlabs.insurance.exception.RegistrationFailedException;
+import com.techlabs.insurance.exception.StatusNotFoundException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.exception.UsernameAlreadyExistsException;
 import com.techlabs.insurance.payload.RegisterDto;
@@ -49,19 +59,66 @@ public class CustomerServiceImpl implements CustomerService{
 	
 	@Override
 	public ResponseEntity<Customer> registerCustomer(Customer customer) {
-		RegisterDto registerDto = new RegisterDto();
-		
-		if(userRepo.existsByUsername(customer.getUser().getUsername())) {
-			throw new UsernameAlreadyExistsException(HttpStatus.BAD_REQUEST, "Username already exists!!!");
-		}
-		
-		registerDto.setUsername(customer.getUser().getUsername());
-		registerDto.setPassword(customer.getUser().getPassword());
-		User user = authService.register(registerDto, 1);
-		customer.setUser(user);
-		customer.setUserStatus(userStatusRepo.findById(1).get());
-		customerRepo.save(customer);
-		return new ResponseEntity<>(customer,HttpStatus.OK) ;
+	    if (customer == null || customer.getUser() == null || customer.getUser().getUsername() == null || customer.getUser().getPassword() == null) {
+	        throw new IllegalArgumentException("Customer data is incomplete");
+	    }
+
+	    String username = customer.getUser().getUsername();
+	    String password = customer.getUser().getPassword();
+	    
+	    String firstname = customer.getFirstname();
+	    String lastname = customer.getLastname();
+	    String email = customer.getEmail();
+	    long phoneno = customer.getPhoneno();
+	    Date dob = customer.getDOB();
+
+	    if (userRepo.existsByUsername(username)) {
+	        throw new UsernameAlreadyExistsException("Username already exists!!!", HttpStatus.BAD_REQUEST);
+	    }
+	    
+	    if (!isValidPassword(password)) {
+	        throw new InvalidPasswordException(HttpStatus.BAD_REQUEST, "Invalid password format");
+	    }
+	    
+	    if(!isValidFirstname(firstname)) {
+	    	throw new InvalidFirstnameException(HttpStatus.BAD_REQUEST, "Invalid firstname format");
+	    }
+	    
+	    if(!isValidLastname(lastname)) {
+	    	throw new InvalidLastnameException(HttpStatus.BAD_REQUEST, "Invalid lastname format");
+	    }
+	    
+	    if(!isValidEmail(email)) {
+	    	throw new InvalidEmailException(HttpStatus.BAD_REQUEST, "Invalid email format");
+	    }
+	    
+	    if(!isValidPhoneno(phoneno)) {
+	    	throw new InvalidPhonenoException(HttpStatus.BAD_REQUEST, "Invalid phoneno format");
+	    }
+
+	    RegisterDto registerDto = new RegisterDto();
+	    registerDto.setUsername(username);
+	    registerDto.setPassword(password);
+
+	    User user = authService.register(registerDto, 1);
+
+	    if (user == null) {
+	        throw new RegistrationFailedException(HttpStatus.INTERNAL_SERVER_ERROR, "User registration failed");
+	    }
+
+	    customer.setUser(user);
+
+	    UserStatus userStatus = userStatusRepo.findById(1).orElse(null);
+
+	    if (userStatus == null) {
+	        throw new StatusNotFoundException( HttpStatus.NOT_FOUND,"User status not found");
+	    }
+
+	    customer.setUserStatus(userStatus);
+
+	    customerRepo.save(customer);
+
+	    return new ResponseEntity<>(customer, HttpStatus.OK);
 	}
 
 	@Override
@@ -160,15 +217,48 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public Customer updateCustomer(int customerId, Customer customer) {
+	public ResponseEntity<Customer> updateCustomer(int customerId, Customer customer) {
 		Customer existingCustomer = customerRepo.findById(customerId)
-	            .orElseThrow(() -> new NoSuchElementException("Customer not found"));
+	            .orElseThrow(() -> new UserAPIException(HttpStatus.NOT_FOUND,"Customer not found"));
+		
+		    String username = customer.getUser().getUsername();
+		    String password = customer.getUser().getPassword();
+		    
+		    String firstname = customer.getFirstname();
+		    String lastname = customer.getLastname();
+		    String email = customer.getEmail();
+		    long phoneno = customer.getPhoneno();
+		    Date dob = customer.getDOB();
 
-	    existingCustomer.setFirstname(customer.getFirstname());
-	    existingCustomer.setLastname(customer.getLastname());
-	    existingCustomer.setEmail(customer.getEmail());
-	    existingCustomer.setPhoneno(customer.getPhoneno());
-	    existingCustomer.setDOB(customer.getDOB());
+		    if (userRepo.existsByUsername(username)) {
+		        throw new UsernameAlreadyExistsException("Username already exists!!!", HttpStatus.BAD_REQUEST);
+		    }
+		    
+		    if (!isValidPassword(password)) {
+		        throw new InvalidPasswordException(HttpStatus.BAD_REQUEST, "Invalid password format");
+		    }
+		    
+		    if(!isValidFirstname(firstname)) {
+		    	throw new InvalidFirstnameException(HttpStatus.BAD_REQUEST, "Invalid firstname format");
+		    }
+		    
+		    if(!isValidLastname(lastname)) {
+		    	throw new InvalidLastnameException(HttpStatus.BAD_REQUEST, "Invalid lastname format");
+		    }
+		    
+		    if(!isValidEmail(email)) {
+		    	throw new InvalidEmailException(HttpStatus.BAD_REQUEST, "Invalid email format");
+		    }
+		    
+		    if(!isValidPhoneno(phoneno)) {
+		    	throw new InvalidPhonenoException(HttpStatus.BAD_REQUEST, "Invalid phoneno format");
+		    }
+
+	    existingCustomer.setFirstname(firstname);
+	    existingCustomer.setLastname(lastname);
+	    existingCustomer.setEmail(email);
+	    existingCustomer.setPhoneno(phoneno);
+	    existingCustomer.setDOB(dob);
 
 	    existingCustomer.getAddress().setAddress(customer.getAddress().getAddress());
 	    existingCustomer.getAddress().setCity(customer.getAddress().getCity());
@@ -187,20 +277,74 @@ public class CustomerServiceImpl implements CustomerService{
 			existingCustomer.setUser(existingUser);
 		}
 
-	    return customerRepo.save(existingCustomer);
+	    customerRepo.save(existingCustomer);
+	    return new ResponseEntity<>(existingCustomer, HttpStatus.OK);
 	}
 
 	@Override
-	public Customer registerCustomerByAgent(Customer customer, int agentid) {
+	public ResponseEntity<Customer> registerCustomerByAgent(Customer customer, int agentid) {
+		if (customer == null || customer.getUser() == null || customer.getUser().getUsername() == null || customer.getUser().getPassword() == null) {
+		        throw new IllegalArgumentException("Customer data is incomplete");
+		}
+		
+
+	    String username = customer.getUser().getUsername();
+	    String password = customer.getUser().getPassword();
+	    
+	    String firstname = customer.getFirstname();
+	    String lastname = customer.getLastname();
+	    String email = customer.getEmail();
+	    long phoneno = customer.getPhoneno();
+	    Date dob = customer.getDOB();
+
+	    if (userRepo.existsByUsername(username)) {
+	        throw new UsernameAlreadyExistsException("Username already exists!!!", HttpStatus.BAD_REQUEST);
+	    }
+	    
+	    if (!isValidPassword(password)) {
+	        throw new InvalidPasswordException(HttpStatus.BAD_REQUEST, "Invalid password format");
+	    }
+	    
+	    if(!isValidFirstname(firstname)) {
+	    	throw new InvalidFirstnameException(HttpStatus.BAD_REQUEST, "Invalid firstname format");
+	    }
+	    
+	    if(!isValidLastname(lastname)) {
+	    	throw new InvalidLastnameException(HttpStatus.BAD_REQUEST, "Invalid lastname format");
+	    }
+	    
+	    if(!isValidEmail(email)) {
+	    	throw new InvalidEmailException(HttpStatus.BAD_REQUEST, "Invalid email format");
+	    }
+	    
+	    if(!isValidPhoneno(phoneno)) {
+	    	throw new InvalidPhonenoException(HttpStatus.BAD_REQUEST, "Invalid phoneno format");
+	    }
+		 
 		RegisterDto registerDto = new RegisterDto();
-		registerDto.setUsername(customer.getUser().getUsername());
+		registerDto.setUsername(username);
 		registerDto.setPassword(customer.getUser().getPassword());
+		
 		User user = authService.register(registerDto, 1);
-		customer.setUser(user);
-		Agent agent = agentRepo.findById(agentid).orElseThrow();
+
+	    if (user == null) {
+	        throw new RegistrationFailedException(HttpStatus.INTERNAL_SERVER_ERROR, "User registration failed");
+	    }
+
+	    customer.setUser(user);
+	    
+		Agent agent = agentRepo.findById(agentid).orElseThrow(()-> new UserAPIException(HttpStatus.NOT_FOUND,"Agent Not Found!!!"));
 		customer.setAgent(agent);
-		customer.setUserStatus(userStatusRepo.findById(1).get());
-		return customerRepo.save(customer);
+		
+		UserStatus userStatus = userStatusRepo.findById(1).orElse(null);
+
+	    if (userStatus == null) {
+	        throw new StatusNotFoundException( HttpStatus.NOT_FOUND,"User status not found");
+	    }
+
+	    customer.setUserStatus(userStatus);
+		customerRepo.save(customer);
+		return new ResponseEntity<>(customer,HttpStatus.OK) ;
 	}
 
 	@Override
@@ -210,4 +354,43 @@ public class CustomerServiceImpl implements CustomerService{
 		customerRepo.save(customer);
 	}
 	
+	private boolean isValidPassword(String password) {
+		 String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&!])[A-Za-z\\d@#$%^&!]{8,}$";
+	     Pattern pattern = Pattern.compile(passwordPattern);
+	     Matcher matcher = pattern.matcher(password);
+	     return matcher.matches();
+	}
+	
+
+	private boolean isValidFirstname(String firstname) {
+		String regex = "^[A-Za-z][A-Za-z\\s]*$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(firstname);
+        return matcher.matches();
+	}
+	
+
+	private boolean isValidLastname(String lastname) {
+		String regex = "^[A-Za-z][A-Za-z\\s]*$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(lastname);
+        return matcher.matches();
+	}
+	
+	private boolean isValidEmail(String email) {
+		String regex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+	}
+	
+
+	private boolean isValidPhoneno(long phoneno) {
+		String regex = "^[0-9]{10}$";
+		String phonenoString = String.valueOf(phoneno);
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phonenoString);
+        return matcher.matches();
+	}
+
 }

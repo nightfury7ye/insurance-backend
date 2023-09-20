@@ -69,7 +69,7 @@ public class AdminServiceImpl implements AdminService{
 		User user = new User();
 		
 		if(userRepo.existsByUsername(admin.getUser().getUsername())) {
-			throw new UsernameAlreadyExistsException(HttpStatus.BAD_REQUEST, "Username already exists!!!");
+			throw new UsernameAlreadyExistsException("Username already exists!!!", HttpStatus.BAD_REQUEST);
 		}
 		
 		user.setUsername(admin.getUser().getUsername());

@@ -30,7 +30,7 @@ public class CustomerController {
 	}
 	
 	@PostMapping("/users/agent/{agentid}/customer")
-	public Customer registerCustomerbyAgent(@RequestBody Customer customer,@PathVariable(name="agentid") int agentid) {
+	public ResponseEntity<Customer> registerCustomerbyAgent(@RequestBody Customer customer,@PathVariable(name="agentid") int agentid) {
 		return customerService.registerCustomerByAgent(customer, agentid);
 	}
 	
@@ -82,7 +82,7 @@ public class CustomerController {
 	}
 	
 	@PutMapping("/users/customer/{customerid}")
-	public Customer updateCustomer(@PathVariable(name="customerid")int customerId, @RequestBody Customer customer) {
+	public ResponseEntity<Customer> updateCustomer(@PathVariable(name="customerid")int customerId, @RequestBody Customer customer) {
 		return customerService.updateCustomer(customerId, customer);
 	}
 	
