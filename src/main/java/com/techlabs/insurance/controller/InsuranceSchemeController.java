@@ -30,7 +30,7 @@ public class InsuranceSchemeController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/insurance-scheme/{schemeid}")
-	InsuranceScheme updateInsuranceScheme(@RequestBody InsuranceScheme insuranceSchemeData,@PathVariable(name="schemeid") int schemeid,@RequestParam(name="statusid") int statusid) {
+	ResponseEntity<InsuranceScheme> updateInsuranceScheme(@RequestBody InsuranceScheme insuranceSchemeData,@PathVariable(name="schemeid") int schemeid,@RequestParam(name="statusid") int statusid) {
 		return insuranceSchemeService.updateInsuranceScheme(insuranceSchemeData, schemeid, statusid);
 	}
 	

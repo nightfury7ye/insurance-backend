@@ -9,7 +9,7 @@ public interface InsuranceSchemeService {
 
 	public String deleteInsuranceScheme(int schemeid);
 	
-	public InsuranceScheme updateInsuranceScheme(InsuranceScheme insuranceSchemeData, int schemeid, int statusid);
+	public ResponseEntity<InsuranceScheme> updateInsuranceScheme(InsuranceScheme insuranceSchemeData, int schemeid, int statusid);
 	
 	public void toggleSchemeStatus(int schemeId, int newStatusId);
 }

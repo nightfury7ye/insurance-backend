@@ -110,4 +110,39 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(InvalidPlannameException.class)
+	public ResponseEntity<?> handleInvalidPlannameException(InvalidPlannameException e){
+		System.out.println(e.getMessage());
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(InvalidAgeException.class)
+	public ResponseEntity<?> handleInvalidAgeException(InvalidAgeException e){
+		System.out.println(e.getMessage());
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(InvalidAmountException.class)
+	public ResponseEntity<?> handleInvalidAmountException(InvalidAmountException e){
+		System.out.println(e.getMessage());
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(InvalidInvestTimeException.class)
+	public ResponseEntity<?> handleInvalidInvestTimeException(InvalidInvestTimeException e){
+		System.out.println(e.getMessage());
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(InvalidRegistrationCommissionRatioException.class)
+	public ResponseEntity<?> handleInvalidRegistrationCommissionRatioException(InvalidRegistrationCommissionRatioException e){
+		System.out.println(e.getMessage());
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(InvalidProfitRatioException.class)
+	public ResponseEntity<?> handleInvalidProfitRatioException(InvalidProfitRatioException e){
+		System.out.println(e.getMessage());
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
 }

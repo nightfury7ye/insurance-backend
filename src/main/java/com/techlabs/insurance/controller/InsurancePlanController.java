@@ -25,7 +25,7 @@ public class InsurancePlanController {
 	@Autowired
 	private InsurancePlanService insurancePlanService;
 	
-	@PreAuthorize("hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/insurance-plan")
 	public ResponseEntity<InsurancePlan> saveInsurancePlan(@RequestBody InsurancePlan insurancePlan,@RequestParam(name="statusid") int statusid) {
 		return insurancePlanService.saveInsurancePlan(insurancePlan, statusid);
