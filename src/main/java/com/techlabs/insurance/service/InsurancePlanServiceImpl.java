@@ -2,6 +2,8 @@ package com.techlabs.insurance.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ import com.techlabs.insurance.entities.Status;
 import com.techlabs.insurance.entities.UserStatus;
 import com.techlabs.insurance.exception.InsurancePlanNotFoundException;
 import com.techlabs.insurance.exception.InsuranceSchemeNotFoundException;
+import com.techlabs.insurance.exception.InvalidFirstnameException;
+import com.techlabs.insurance.exception.InvalidPlannameException;
 import com.techlabs.insurance.exception.PlanAlreadyExistsException;
 import com.techlabs.insurance.exception.StatusNotFoundException;
 import com.techlabs.insurance.exception.UserAPIException;
@@ -36,9 +40,17 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 	@Override
 	public ResponseEntity<InsurancePlan> saveInsurancePlan(InsurancePlan insurancePlan, int statusid) {
 		Optional<Status> status = statusRepo.findById(statusid);
-		if(insurancePlanRepo.existsByPlanname(insurancePlan.getPlanname())) {
+		
+		String planname = insurancePlan.getPlanname();
+		
+		if(insurancePlanRepo.existsByPlanname(planname)) {
 			throw new PlanAlreadyExistsException(HttpStatus.BAD_REQUEST, "Plan Already Exists!!!");
 		}
+		
+		if(!isValidPlanname(planname)) {
+	    	throw new InvalidPlannameException(HttpStatus.BAD_REQUEST, "Invalid planname format");
+	    }
+	    
 		if(status.isPresent()) {
 			insurancePlan.setStatus(status.get());
 		}else {
@@ -46,6 +58,13 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 		}
 		insurancePlanRepo.save(insurancePlan);
 		return new ResponseEntity<>(insurancePlan,HttpStatus.OK) ;
+	}
+
+	private boolean isValidPlanname(String planname) {
+		String regex = "^[A-Za-z][A-Za-z\\s]*$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(planname);
+		return matcher.matches();
 	}
 
 	@Override
@@ -68,15 +87,24 @@ public class InsurancePlanServiceImpl implements InsurancePlanService{
 		InsurancePlan insurancePlan = insurancePlanRepo.findById(planid).orElseThrow(()-> new InsurancePlanNotFoundException(HttpStatus.BAD_REQUEST,"Insurance Plan Not Found!!!"));
 		Optional<Status> status = statusRepo.findById(statusid);
 		
-			insurancePlan.setPlanname(insurancePlanData.getPlanname());
-			if(status.isPresent()) {
-				insurancePlan.setStatus(status.get());
-			}else {
-				insurancePlan.setStatus(statusRepo.findById(1).get());
+		String planname = insurancePlanData.getPlanname();
+		
+		if(insurancePlanRepo.existsByPlanname(planname)) {
+			throw new PlanAlreadyExistsException(HttpStatus.BAD_REQUEST, "Plan Already Exists!!!");
+		}
+		
+		if(!isValidPlanname(planname)) {
+	    	throw new InvalidPlannameException(HttpStatus.BAD_REQUEST, "Invalid planname format");
+	    }
+		
+		insurancePlan.setPlanname(planname);
+			
+		if(status.isPresent()) {
+			insurancePlan.setStatus(status.get());
+		}else {
+			insurancePlan.setStatus(statusRepo.findById(1).get());
 			}
-			return insurancePlanRepo.save(insurancePlan);
-		
-		
+		return insurancePlanRepo.save(insurancePlan);
 	}
 
 	@Override

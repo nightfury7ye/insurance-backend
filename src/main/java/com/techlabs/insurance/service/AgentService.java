@@ -8,12 +8,12 @@ import com.techlabs.insurance.entities.Agent;
 public interface AgentService {
 	public ResponseEntity<Agent> addAgent(Agent agent, int statusId);
 	public void deleteAgent(int agentId);
-	public Agent updateAgentStatus(int agentId, int statusId);
+	public ResponseEntity<Agent> updateAgentStatus(int agentId, int statusId);
 	public ResponseEntity<Page<Agent>> getAllAgents(int page, int size);
 	
 	public Agent registerAgent(Agent agent);
 	public Agent getAgentByUsername(String username);
-	public Agent updateAgentProfile(String username, Agent updatedAgent);
+	public ResponseEntity<Agent> updateAgentProfile(String username, Agent updatedAgent);
 	
 	public void activeAgentStatus(int agentId);
 	public void inactiveAgentStatus(int agentId);

@@ -2,10 +2,10 @@ package com.techlabs.insurance.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class InsufficientBalanceException extends RuntimeException{
+public class InvalidLastnameException extends RuntimeException{
 	private String message;
 	private HttpStatus status;
-	public InsufficientBalanceException(HttpStatus status, String message) {
+	public InvalidLastnameException(HttpStatus status, String message) {
 		super();
 		this.message = message;
 		this.status = status;
@@ -13,8 +13,12 @@ public class InsufficientBalanceException extends RuntimeException{
 	public String getMessage() {
 		return message;
 	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	@Override
 	public String toString() {
-		return "ListIsEmptyException [message=" + message + ", status=" + status + "]";
+		return "InvalidLastnameException [message=" + message + ", status=" + status + "]";
 	}
 }
+
