@@ -26,7 +26,7 @@ public class AdminController {
 //	}
 	
 	@PutMapping("/users/admin/{adminid}")
-	public Admin updateAdminProfile(@PathVariable(name="adminid")int adminId, @RequestBody Admin updatedAdmin) {
+	public ResponseEntity<Admin> updateAdminProfile(@PathVariable(name="adminid")int adminId, @RequestBody Admin updatedAdmin) {
 		return adminService.updateAdminProfile(adminId, updatedAdmin);
 	}
 	

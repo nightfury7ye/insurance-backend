@@ -42,8 +42,8 @@ public class EmployeeController {
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	@PutMapping("/users/employee/{employeeid}")
-	public void updateEmployee(@PathVariable(name="employeeid")int employeeId, @RequestBody Employee updatedEmployee) {
-		employeeService.updateEmployee(employeeId, updatedEmployee);
+	public ResponseEntity<Employee> updateEmployee(@PathVariable(name="employeeid")int employeeId, @RequestBody Employee updatedEmployee) {
+		return employeeService.updateEmployee(employeeId, updatedEmployee);
 	}
 	
 //	@GetMapping("/users/employee/{employeeid}")

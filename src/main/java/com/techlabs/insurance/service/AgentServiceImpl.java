@@ -3,6 +3,8 @@ package com.techlabs.insurance.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,11 @@ import com.techlabs.insurance.entities.Agent;
 import com.techlabs.insurance.entities.Role;
 import com.techlabs.insurance.entities.User;
 import com.techlabs.insurance.entities.UserStatus;
+import com.techlabs.insurance.exception.InvalidEmailException;
+import com.techlabs.insurance.exception.InvalidFirstnameException;
+import com.techlabs.insurance.exception.InvalidLastnameException;
+import com.techlabs.insurance.exception.InvalidPasswordException;
+import com.techlabs.insurance.exception.InvalidPhonenoException;
 import com.techlabs.insurance.exception.ListIsEmptyException;
 import com.techlabs.insurance.exception.UserAPIException;
 import com.techlabs.insurance.exception.UsernameAlreadyExistsException;
@@ -52,13 +59,41 @@ public class AgentServiceImpl implements AgentService{
 	
 	@Override
 	public ResponseEntity<Agent> addAgent(Agent agent, int statusId) {
+		String username = agent.getUser().getUsername();
+		String password = agent.getUser().getPassword();
+		    
+		String firstname = agent.getFirstname();
+		String lastname = agent.getLastname();
+		String email = agent.getEmail();
+		long phoneno = agent.getPhoneno();
 		User user = agent.getUser();
 		
-		if(userRepo.existsByUsername(agent.getUser().getUsername())) {
+		if(userRepo.existsByUsername(username)) {
 			throw new UsernameAlreadyExistsException("Username already exists!!!", HttpStatus.BAD_REQUEST);
 		}
-		user.setUsername(user.getUsername());
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		
+		if (!isValidPassword(password)) {
+	        throw new InvalidPasswordException(HttpStatus.BAD_REQUEST, "Invalid password format");
+	    }
+	    
+	    if(!isValidFirstname(firstname)) {
+	    	throw new InvalidFirstnameException(HttpStatus.BAD_REQUEST, "Invalid firstname format");
+	    }
+	    
+	    if(!isValidLastname(lastname)) {
+	    	throw new InvalidLastnameException(HttpStatus.BAD_REQUEST, "Invalid lastname format");
+	    }
+	    
+	    if(!isValidEmail(email)) {
+	    	throw new InvalidEmailException(HttpStatus.BAD_REQUEST, "Invalid email format");
+	    }
+	    
+	    if(!isValidPhoneno(phoneno)) {
+	    	throw new InvalidPhonenoException(HttpStatus.BAD_REQUEST, "Invalid phoneno format");
+	    }
+		
+		user.setUsername(username);
+		user.setPassword(passwordEncoder.encode(password));
 		
 		Optional<Role> userRole= roleRepo.findById(2);
 		List<Role> roles = new ArrayList<Role>();
@@ -84,7 +119,7 @@ public class AgentServiceImpl implements AgentService{
 	}
 
 	@Override
-	public Agent updateAgentStatus(int agentId, int statusId) {
+	public ResponseEntity<Agent> updateAgentStatus(int agentId, int statusId) {
 		Agent agent = agentRepo.findById(agentId).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"Agent Not Found!!!"));
 		
 		Optional<UserStatus> status = userStatusRepo.findById(statusId);
@@ -94,7 +129,8 @@ public class AgentServiceImpl implements AgentService{
 			agent.setUserStatus(userStatusRepo.findById(1).get());
 		}
 		
-		return agentRepo.save(agent);
+		agentRepo.save(agent);
+		return new ResponseEntity<>(agent,HttpStatus.OK) ;
 	}
 
 	@Override
@@ -123,27 +159,61 @@ public class AgentServiceImpl implements AgentService{
 	}
 
 	@Override
-	public Agent updateAgentProfile(String username, Agent updatedAgent) {
+	public ResponseEntity<Agent> updateAgentProfile(String username, Agent updatedAgent) {
+		String username2 = updatedAgent.getUser().getUsername();
+		String password = updatedAgent.getUser().getPassword();
+		    
+		String firstname = updatedAgent.getFirstname();
+		String lastname = updatedAgent.getLastname();
+		String email = updatedAgent.getEmail();
+		long phoneno = updatedAgent.getPhoneno();
+		User user = updatedAgent.getUser();
+		
+		if(userRepo.existsByUsername(username)) {
+			throw new UsernameAlreadyExistsException("Username already exists!!!", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (!isValidPassword(password)) {
+	        throw new InvalidPasswordException(HttpStatus.BAD_REQUEST, "Invalid password format");
+	    }
+	    
+	    if(!isValidFirstname(firstname)) {
+	    	throw new InvalidFirstnameException(HttpStatus.BAD_REQUEST, "Invalid firstname format");
+	    }
+	    
+	    if(!isValidLastname(lastname)) {
+	    	throw new InvalidLastnameException(HttpStatus.BAD_REQUEST, "Invalid lastname format");
+	    }
+	    
+	    if(!isValidEmail(email)) {
+	    	throw new InvalidEmailException(HttpStatus.BAD_REQUEST, "Invalid email format");
+	    }
+	    
+	    if(!isValidPhoneno(phoneno)) {
+	    	throw new InvalidPhonenoException(HttpStatus.BAD_REQUEST, "Invalid phoneno format");
+	    }
+		
 		Agent existingAgent = agentRepo.findByUserUsername(username);
 		if(existingAgent != null) {
-			existingAgent.setFirstname(updatedAgent.getFirstname());
-			existingAgent.setLastname(updatedAgent.getLastname());
-			existingAgent.setEmail(updatedAgent.getEmail());
-			existingAgent.setPhoneno(updatedAgent.getPhoneno());
+			existingAgent.setFirstname(firstname);
+			existingAgent.setLastname(lastname);
+			existingAgent.setEmail(email);
+			existingAgent.setPhoneno(phoneno);
 			existingAgent.setQualification(updatedAgent.getQualification());
 			
 			User existingUser = userRepo.findById(existingAgent.getUser().getUserid()).orElseThrow(()-> new UserAPIException(HttpStatus.BAD_REQUEST,"User Not Found!!!"));
 			if(existingUser != null) {
-				existingUser.setUsername(updatedAgent.getUser().getUsername());
-				if(updatedAgent.getUser().getPassword() != null) {
-					existingUser.setPassword(passwordEncoder.encode(updatedAgent.getUser().getPassword()));
+				existingUser.setUsername(username2);
+				if(password != null) {
+					existingUser.setPassword(passwordEncoder.encode(password));
 				}
 				existingAgent.setUser(existingUser);
 			}
 		}else {
 			throw new UserAPIException(HttpStatus.BAD_REQUEST, "Agent Not Found!!!");
 		}
-		return agentRepo.save(existingAgent);
+		agentRepo.save(existingAgent);
+		return new ResponseEntity<>(existingAgent,HttpStatus.OK) ;
 	}
 	
 	public void activeAgentStatus(int agentId) {
@@ -171,5 +241,45 @@ public class AgentServiceImpl implements AgentService{
         	
         }
     }
+    
+    private boolean isValidPassword(String password) {
+		 String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&!])[A-Za-z\\d@#$%^&!]{8,}$";
+	     Pattern pattern = Pattern.compile(passwordPattern);
+	     Matcher matcher = pattern.matcher(password);
+	     return matcher.matches();
+	}
+	
+
+	private boolean isValidFirstname(String firstname) {
+		String regex = "^[A-Za-z][A-Za-z\\s]*$";
+      Pattern pattern = Pattern.compile(regex);
+      Matcher matcher = pattern.matcher(firstname);
+      return matcher.matches();
+	}
+	
+
+	private boolean isValidLastname(String lastname) {
+		String regex = "^[A-Za-z][A-Za-z\\s]*$";
+      Pattern pattern = Pattern.compile(regex);
+      Matcher matcher = pattern.matcher(lastname);
+      return matcher.matches();
+	}
+	
+	private boolean isValidEmail(String email) {
+		String regex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}$";
+      Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+      Matcher matcher = pattern.matcher(email);
+      return matcher.matches();
+	}
+	
+
+	private boolean isValidPhoneno(long phoneno) {
+		String regex = "^[0-9]{10}$";
+		String phonenoString = String.valueOf(phoneno);
+      Pattern pattern = Pattern.compile(regex);
+      Matcher matcher = pattern.matcher(phonenoString);
+      return matcher.matches();
+	}
+
 
 }

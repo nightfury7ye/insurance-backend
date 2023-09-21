@@ -36,7 +36,7 @@ public class AgentController {
 	
 	@PreAuthorize("hasRole('AGENT')")
 	@PutMapping("/users/agent/{username}")
-	public Agent updateAgentProfile(@PathVariable(name="username")String username, @RequestBody Agent updatedAgent) {
+	public ResponseEntity<Agent> updateAgentProfile(@PathVariable(name="username")String username, @RequestBody Agent updatedAgent) {
 		return agentService.updateAgentProfile(username, updatedAgent);
 	}
 	
@@ -48,7 +48,7 @@ public class AgentController {
 	
 	@PreAuthorize("hasRole('EMPLOYEE')")
 	@PutMapping("/users/agent/{agentid}/status/{statusid}")
-	public Agent updateAgentStatus(@PathVariable(name="agentid")int agentId, @PathVariable(name="statusid")int statusId) {
+	public ResponseEntity<Agent> updateAgentStatus(@PathVariable(name="agentid")int agentId, @PathVariable(name="statusid")int statusId) {
 		return agentService.updateAgentStatus(agentId, statusId);
 	}
 	
